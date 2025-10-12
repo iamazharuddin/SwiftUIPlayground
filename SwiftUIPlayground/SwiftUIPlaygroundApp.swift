@@ -13,7 +13,8 @@ struct SwiftUIPlaygroundApp: App {
         WindowGroup {
 //            SlideToConfirm()
 //            ChipsView()
-            CardSkeletonView()
+//            CardSkeletonView()
+            InternetConnectivityWrapperView()
         }
     }
 }
