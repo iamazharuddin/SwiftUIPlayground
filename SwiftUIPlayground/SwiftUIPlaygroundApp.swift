@@ -14,7 +14,8 @@ struct SwiftUIPlaygroundApp: App {
 //            SlideToConfirm()
 //            ChipsView()
 //            CardSkeletonView()
-            InternetConnectivityWrapperView()
+//            InternetConnectivityWrapperView()
+            FullScreenSheetContainerView()
         }
     }
 }
