@@ -31,7 +31,7 @@ struct FullScreenSheetContainerView: View {
                 }
                 .listStyle(.plain)
                 .scrollContentBackground(.hidden)
-//                .navigationTransition(.zoom(sourceID: "BUTTON", in: animation))
+                .navigationTransition(.zoom(sourceID: "BUTTON", in: animation))
             } background: {
                  Rectangle()
                     .fill(Color.cyan.gradient)

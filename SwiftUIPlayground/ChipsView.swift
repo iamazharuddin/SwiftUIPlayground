@@ -16,7 +16,7 @@ struct ChipsView: View {
                     .fontWeight(.semibold)
                     .padding(.vertical, 5)
                     .padding(.horizontal, 10)
-                    .background(.white)
+                    .background(.white, in: .capsule)
             }
         }
         .padding(15)

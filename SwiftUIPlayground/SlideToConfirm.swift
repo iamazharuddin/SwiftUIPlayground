@@ -103,7 +103,7 @@ struct SlideToConfirm: View {
                     .rotationEffect(.init(degrees: 90))
                     .visualEffect { [animatedText] content, proxy in
                         content
-                            .offset(x: -proxy.size.width / 1.8)
+                            .offset(x: -proxy.size.width/1.8)
                             .offset(x: animatedText ? proxy.size.width * 1.2 : 0)
                     }
                     .mask {
@@ -130,11 +130,11 @@ struct SlideToConfirm: View {
     func LeadingTextView(  _ size: CGSize, _ progress:CGFloat) -> some View {
          Text("Confirm Payment")
             .fontWeight(.semibold)
-            .frame(maxWidth: .infinity, alignment: .leading)
+            .frame(maxWidth: .infinity, alignment: .center)
             .padding(.trailing, size.height / 2)
             .mask {
                 Rectangle()
-                    .scale(x: progress)
+                    .scale(x: progress, anchor: .leading)
             }
     }
 }
