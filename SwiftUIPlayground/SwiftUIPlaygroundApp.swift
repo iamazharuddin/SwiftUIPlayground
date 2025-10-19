@@ -16,10 +16,9 @@ struct SwiftUIPlaygroundApp: App {
 //            CardSkeletonView()
 //            InternetConnectivityWrapperView()
 //            FullScreenSheetContainerView()
-            
 //            PlayGround()
-            
-            StarView()
+//            StarView()
+              CurvedAnimation()
         }
     }
 }
