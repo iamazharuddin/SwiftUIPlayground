@@ -18,7 +18,8 @@ struct SwiftUIPlaygroundApp: App {
 //            FullScreenSheetContainerView()
 //            PlayGround()
 //            StarView()
-              CurvedAnimation()
+//              CurvedAnimation()
+            CustomCurve()
         }
     }
 }
