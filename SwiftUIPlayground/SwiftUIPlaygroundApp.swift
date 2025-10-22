@@ -19,7 +19,8 @@ struct SwiftUIPlaygroundApp: App {
 //            PlayGround()
 //            StarView()
 //              CurvedAnimation()
-            CustomCurve()
+//            CustomCurve()
+            PlayGround()
         }
     }
 }

@@ -1,14 +1,22 @@
-//
-//  PlayGround.swift
-//  SwiftUIPlayground
-//
-//  Created by Azharuddin Salahuddin on 16/10/25.
-//
-
 import SwiftUI
+
 struct PlayGround: View {
     var body: some View {
-        ShimmerView()
+        ScrollView {
+            VStack(spacing: 20) {
+                ForEach(0..<30) { i in
+                    Text("Row \(i)")
+                        .padding()
+                        .frame(maxWidth: .infinity)
+                        .background(Color.yellow.opacity(0.3))
+                        .cornerRadius(8)
+                }
+            }
+            .background { ScrollDetector { offsetY in
+                print("✅ Found UIScrollView:", offsetY)
+             }
+            }
+        }
     }
 }
 
@@ -17,40 +25,39 @@ struct PlayGround: View {
 }
 
 
-struct ShimmerView: View {
-    @State private var isAnimating:Bool = false
-    var body: some View {
-        Circle()
-            .fill(Color.gray.opacity(0.5))
-            .frame(width: 150, height: 150)
-            .overlay  {
-                GeometryReader {
-                    let size = $0.size
-                    let shimmerWidth = size.width / 2.5
-                    let height = size.height * 2
-                    let minOffset:CGFloat = -size.width * 1.1
-                    let maxOffset:CGFloat =  size.width * 1.1
-                    Rectangle()
-                        .fill(
-                            Color.gray
-                        )
-                        .frame(width: shimmerWidth, height: height)
-                        .rotationEffect(.degrees(5))
-                        .blur(radius: size.width / 3)
-                        .offset(x: isAnimating ? maxOffset : minOffset, y: -size.height/2)
-                }
+struct ScrollDetector: UIViewRepresentable {
+    var onScrollViewOffsetChnage: (CGFloat) -> Void
+    
+    func makeUIView(context: Context) -> UIView {
+        let view = UIView()
+        return view
+    }
+    
+    func updateUIView(_ uiView: UIView, context: Context) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
+            if let scrollView = uiView.superview?.superview?.superview as? UIScrollView, !context.coordinator.isDelegateAdded {
+                scrollView.delegate = context.coordinator
+                context.coordinator.isDelegateAdded = true
             }
-            .animation(.linear.delay(1).repeatForever(autoreverses: false), value: isAnimating)
-            .onAppear {
-                DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-//                    isAnimating = true
-                }
-            }
-            .mask {
-                Circle()
-                    .frame(width: 150, height: 150)
-            }
-            .scaleEffect(isAnimating ? 1 : 0.5)
-            .opacity(isAnimating ? 1 : 0.5)
+        }
+    }
+    
+    func makeCoordinator() -> Coordinator {
+        Coordinator(self)
+    }
+    
+    class Coordinator: NSObject, UIScrollViewDelegate {
+        let parent: ScrollDetector
+        var isDelegateAdded = false
+        init( _ parent: ScrollDetector) {
+            self.parent = parent
+        }
+        func scrollViewDidScroll(_ scrollView: UIScrollView) {
+            self.parent.onScrollViewOffsetChnage(scrollView.contentOffset.y)
+        }
+        
+        func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
+            
+        }
     }
 }
