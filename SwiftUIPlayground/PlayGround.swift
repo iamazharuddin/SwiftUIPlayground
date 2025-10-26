@@ -2,20 +2,9 @@ import SwiftUI
 
 struct PlayGround: View {
     var body: some View {
-        ScrollView {
-            VStack(spacing: 20) {
-                ForEach(0..<30) { i in
-                    Text("Row \(i)")
-                        .padding()
-                        .frame(maxWidth: .infinity)
-                        .background(Color.yellow.opacity(0.3))
-                        .cornerRadius(8)
-                }
-            }
-            .background { ScrollDetector { offsetY in
-                print("✅ Found UIScrollView:", offsetY)
-             }
-            }
+        VStack {
+            Spacer()
+            SLideView()
         }
     }
 }
@@ -25,39 +14,71 @@ struct PlayGround: View {
 }
 
 
-struct ScrollDetector: UIViewRepresentable {
-    var onScrollViewOffsetChnage: (CGFloat) -> Void
+
+struct SLideView: View {
     
-    func makeUIView(context: Context) -> UIView {
-        let view = UIView()
-        return view
-    }
-    
-    func updateUIView(_ uiView: UIView, context: Context) {
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            if let scrollView = uiView.superview?.superview?.superview as? UIScrollView, !context.coordinator.isDelegateAdded {
-                scrollView.delegate = context.coordinator
-                context.coordinator.isDelegateAdded = true
+    @State private var offsetX : CGFloat = 0
+    var body: some View {
+        GeometryReader { geometry in
+            let size = geometry.size
+            ZStack(alignment: .leading) {
+                UnevenRoundedRectangle(topLeadingRadius: 25, bottomLeadingRadius: 25, bottomTrailingRadius: 25, topTrailingRadius: 25, style: .continuous)
+                    .fill(Color.gray)
+                
+                let knobSize : CGFloat = size.height
+                let extraWidth  =  size.width - knobSize
+                let progress = offsetX / extraWidth
+                confirmationView()
+                    .frame(width: knobSize + extraWidth * progress, height: knobSize)
+                knowView(size, progress)
             }
         }
+        .frame(width: 300)
+        .frame(height: 50)
     }
     
-    func makeCoordinator() -> Coordinator {
-        Coordinator(self)
+    func knowView(  _ size: CGSize,  _ progress: CGFloat) -> some View {
+         Circle()
+            .fill(Color.green.opacity(0.5))
+            .frame(width: size.height, height: size.height)
+            .overlay {
+                ZStack  {
+                    Image(systemName: "chevron.right")
+                        .font(.system(size: 20))
+                        .fontWeight(.bold)
+                        .foregroundStyle(Color.white)
+                        .opacity(1 - progress)
+                        .blur(radius: 5 * progress)
+                    
+                    Image(systemName: "checkmark")
+                        .font(.system(size: 20))
+                        .fontWeight(.bold)
+                        .foregroundStyle(Color.white)
+                        .opacity(progress)
+                        .blur(radius: 5 * (1-progress))
+                    
+                }
+            }
+            .offset(x: offsetX)
+            .gesture(
+                DragGesture()
+                    .onChanged({ value in
+                        let maxWidth = size.width - size.height
+                        offsetX =  max(min(value.translation.width, maxWidth), 0)
+                    })
+                    .onEnded({ value in
+                        let maxWidth = size.width - size.height
+                        if offsetX == maxWidth  {
+                            print("Slide completed")
+                        } else {
+                            offsetX = 0
+                        }
+                    })
+            )
     }
     
-    class Coordinator: NSObject, UIScrollViewDelegate {
-        let parent: ScrollDetector
-        var isDelegateAdded = false
-        init( _ parent: ScrollDetector) {
-            self.parent = parent
-        }
-        func scrollViewDidScroll(_ scrollView: UIScrollView) {
-            self.parent.onScrollViewOffsetChnage(scrollView.contentOffset.y)
-        }
-        
-        func scrollViewDidEndDecelerating(_ scrollView: UIScrollView) {
-            
-        }
+    func confirmationView() -> some View {
+         RoundedRectangle(cornerRadius: 25)
+            .fill(Color.green)
     }
 }
