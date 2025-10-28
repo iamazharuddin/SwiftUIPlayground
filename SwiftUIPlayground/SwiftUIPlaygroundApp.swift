@@ -20,7 +20,8 @@ struct SwiftUIPlaygroundApp: App {
 //            StarView()
 //              CurvedAnimation()
 //            CustomCurve()
-            PlayGround()
+//            PlayGround()
+            SpotifyHome()
         }
     }
 }
