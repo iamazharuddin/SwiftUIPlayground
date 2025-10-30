@@ -24,6 +24,7 @@ struct CustomListView<NavBar: View, TopContent: View, Header: View, Content:View
                 .onGeometryChange(for: CGFloat.self) {
                     $0.size.height
                 } action: { newValue in
+                    print("Top Content Height: \(newValue)")
                     topContentHeight = newValue
                 }
                 .customListRow()
@@ -35,13 +36,14 @@ struct CustomListView<NavBar: View, TopContent: View, Header: View, Content:View
                     .foregroundStyle(foregroundColor)
                     .onGeometryChange(for: CGFloat.self, of: { proxy in
                         let minY = topContentHeight == 0 ? 0 : proxy.frame(in: .named("LISTVIEW")).minY
+                        print("minY = \(minY)")
                         return minY
                     }, action: { newValue in
                         guard topContentHeight != 0 else { return  }
                         let progress = (newValue - safeAreaTop) / (topContentHeight)
                         let clappedProgress = 1 - max(min(progress, 1), 0)
                         self.headerProgress = clappedProgress
-                        print(clappedProgress)
+                        print("clappedProgress => \(clappedProgress), topContentHeight = \(topContentHeight)")
                     })
                     .customListRow()
             }
@@ -152,3 +154,4 @@ struct CustomListCallingView: View  {
         }
     }
 }
+

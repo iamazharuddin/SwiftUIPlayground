@@ -1,58 +1,29 @@
 import SwiftUI
 
-struct PlayGround: View {
-    @State private var offset:CGFloat = 0
+struct SkeletonViewNew<S:Shape>: View {
+    let shape: S
+    @State var isAnimation: Bool = false
     var body: some View {
-        GeometryReader { proxy  in
-            let safeAreaTop = proxy.safeAreaInsets.top
-            ScrollView {
-                VStack {
-                    HeaderView(safeAreaTop)
-                        .offset(y: -offset  - safeAreaTop)
-                        .zIndex(1)
-                    VStack {
-                        ForEach(1...10, id:\.self) { _ in
-                            RoundedRectangle(cornerRadius: 10, style: .continuous)
-                                .fill(.blue.gradient)
-                                .frame(height: 220)
-                        }
-                    }
-                    .padding(15)
-                    .zIndex(0)
-                }
-                .offsetX(coordinateSpace: "SCROLL") { offset in
-                    print(offset)
-                    self.offset = offset
+        shape
+            .fill(Color.gray.opacity(0.5))
+            .overlay {
+                GeometryReader {
+                    let size = $0.size
+                    Rectangle()
+                    
+                        .frame(width: size.width / 2, height: size.height * 2)
+                        .offset(y: -size.height / 2)
+                        .offset(x: isAnimation ? size.width * 5 : -size.width * 1.1)
+                        .blur(radius: size.width / 2)
+                        .blendMode(.softLight)
                 }
             }
-            .ignoresSafeArea(.container, edges: .top)
-            .coordinateSpace(name: "SCROLL")
-        }
-    }
-    
-    @ViewBuilder
-    func HeaderView(_ safeAreaTop: CGFloat) -> some View {
-        VStack {
-            HStack(spacing: 15) {
-                HStack(spacing: 8) {
-                    Image(systemName: "magnifyingglass")
-                        .foregroundStyle(.white)
-                    TextField("Search", text: .constant("Search Here"))
-                        .tint(.red)
-                }
-                .padding(.vertical, 10)
-                .padding(.horizontal, 15)
-                .background {
-                    RoundedRectangle(cornerRadius: 10, style: .continuous)
-                        .fill(.black)
-                        .opacity(0.15)
+            .mask(shape)
+            .onAppear() {
+                withAnimation(.easeInOut(duration: 2.0).repeatForever(autoreverses: false)) {
+                    isAnimation = true
                 }
             }
-        }
-        .padding(.top, safeAreaTop + 10)
-        .background {
-            Rectangle().fill(Color.red.gradient)
-        }
     }
 }
 
@@ -61,27 +32,45 @@ struct PlayGround: View {
 }
 
 
-
-struct OffsetKey: PreferenceKey {
-    static var defaultValue: CGFloat = 0
-    static func reduce(value: inout CGFloat, nextValue: () -> CGFloat) {
-        value += nextValue()
+struct PlayGround: View {
+    var body: some View {
+        VStack {
+            shimmerView
+            shimmerView
+            shimmerView
+            shimmerView
+        }
     }
-}
-
-
-private extension View {
-    func offsetX(coordinateSpace: String, completion: @escaping (CGFloat) -> Void) -> some View {
-        self
-            .overlay {
-                GeometryReader { proxy in
-                    let minY = proxy.frame(in: .named("SCROLL")).minY
-                    Color.clear
-                        .preference(key: OffsetKey.self, value: minY)
-                        .onPreferenceChange(OffsetKey.self) { value in
-                            completion(value)
-                        }
-                }
+    
+    var shimmerView: some View {
+        HStack {
+            SkeletonViewNew(
+                shape: Circle()
+            )
+            .frame(
+                width: 50,
+                height: 50
+            )
+            VStack {
+                SkeletonViewNew(
+                    shape: RoundedRectangle(cornerRadius: 0)
+                )
+                .frame(
+                    height: 40
+                )
+                .frame(maxWidth: .infinity)
+                
+                SkeletonViewNew(
+                    shape: RoundedRectangle(cornerRadius: 0)
+                )
+                .frame(
+                    height: 8
+                )
+                .frame(maxWidth: .infinity)
             }
+        }
+        .padding(.horizontal, 24)
     }
 }
+
+
