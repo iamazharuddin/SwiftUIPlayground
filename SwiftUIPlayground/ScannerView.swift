@@ -56,3 +56,6 @@ struct ScannerView: View {
 
 
 
+#Preview {
+    ScannerView()
+}

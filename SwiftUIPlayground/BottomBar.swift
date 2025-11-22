@@ -17,34 +17,42 @@ struct AnimatedBottomBar<LeadingAction:View, TrailingAction:View, MainAction:Vie
     @ViewBuilder var trailingAction: () -> TrailingAction
     @ViewBuilder var mainAction: () -> MainAction
     
+    @State private var isHighlighting: Bool = false
     
     var body: some View  {
-        let mainLayout = isFocused ? AnyLayout(ZStackLayout(alignment: .bottomTrailing)) : AnyLayout(HStackLayout(alignment: .bottom, spacing: 10))
+        let mainLayout = isFocused ? AnyLayout(ZStackLayout(alignment: .bottomTrailing)) : AnyLayout(HStackLayout(alignment: .center, spacing: 10))
         let shape = RoundedRectangle(cornerRadius: isFocused ? 25 : 30)
         ZStack {
             mainLayout {
                 let subLayout = isFocused ?
                        AnyLayout(VStackLayout(alignment: .trailing, spacing: 20))
-                     : AnyLayout(ZStackLayout(alignment: .trailing))
+                : AnyLayout(ZStackLayout(alignment: .bottomTrailing))
                 subLayout {
                     TextField(hint, text: $text, axis: .vertical)
-                        .lineLimit(5)
+                        .lineLimit( isFocused ?  5 : 1)
                         .focused(_isFocused)
+                        .mask {
+                            Rectangle()
+                                .padding(.trailing, isFocused ? 0 : 40)
+                        }
                     
                     HStack(spacing: 10) {
-                        ForEach(subviews: leadingAction()) { subView in
-                            subView
-                                .frame(width: 40, height: 40)
-                                .contentShape(.rect)
+                        HStack(spacing: 10) {
+                            ForEach(subviews: leadingAction()) { subView in
+                                subView
+                                    .frame(width: 40, height: 40)
+                                    .contentShape(.rect)
+                            }
                         }
+                        .compositingGroup()
+                        .opacity(isFocused ? 1 : 0)
+                        
+                        Spacer(minLength: 0)
+                        
+                        trailingAction()
+                            .frame(width: 40, height: 40)
+                            .contentShape(.rect)
                     }
-                    .compositingGroup()
-                    
-                    Spacer(minLength: 0)
-                    
-                    trailingAction()
-                        .frame(width: 40, height: 40)
-                        .contentShape(.rect)
                 }
                 .frame(height: isFocused ? nil : 55)
                 .padding(.leading, 15)
@@ -53,24 +61,73 @@ struct AnimatedBottomBar<LeadingAction:View, TrailingAction:View, MainAction:Vie
                 .padding(.top, isFocused ? 20 : 0)
                 .background {
                     shape
-                        .fill(.bar)
-                        .shadow(color: .black.opacity(0.1), radius: 5, x:0, y: 5)
-                        .shadow(color: .black.opacity(0.1), radius: 5, x:0, y: -5)
+                        .fill(
+                            .bar
+                                .shadow(.drop(color: .black.opacity(0.1), radius: 5.0, x:5, y:5))
+                                .shadow(.drop(color: .black.opacity(0.1), radius: 5.0, x:-5, y:-5))
+                        )
+                    HighlightingBackgroundView()
                 }
+                
+                Button {
+                    
+                } label: {
+                    Image(systemName: "paperplane.fill")
+                        .resizable()
+                        .scaledToFit()
+                        .foregroundStyle(.black)
+                        .frame(width: 20, height: 20)
+                        .padding(15)
+                        .contentShape(Circle())
+                        .background {
+                            Circle()
+                                .fill(Color.white)
+                                .shadow(color: Color.black.opacity(0.1),  radius: 5, x: 5, y:5)
+                                .shadow(color: Color.black.opacity(0.1),  radius: 5, x: -5, y:-5)
+                       }
+                }
+                .visualEffect { [isFocused] content, proxy in
+                    content
+                        .offset(x: isFocused ? proxy.size.width + 30 : 0)
+                }
+                
+
             }
+            .geometryGroup()
+        
         }
-        .geometryGroup()
-        .animation(.linear(duration: 1.0), value: isFocused)
+        .animation(.linear(duration: 0.3), value: isFocused)
+    }
+    
+    @ViewBuilder
+    func HighlightingBackgroundView() -> some View {
+        let shape = RoundedRectangle(cornerRadius: isFocused ? 25 : 30)
+        shape
+            .stroke(
+                Color.green.gradient,
+                style: StrokeStyle(lineWidth: 3, lineCap: .round, lineJoin: .round)
+            )
+            .mask {
+                let clearColors = Array(repeating: Color.clear, count: 2)
+                 shape
+                    .fill(
+                        AngularGradient(colors: clearColors + [Color.white] + clearColors, center: .center, angle: .init(degrees: isHighlighting ? 360 : 0))
+                    )
+            }
+            .animation(.linear(duration: 2.0).repeatForever(autoreverses: false), value: isHighlighting)
+            .onAppear() {
+                isHighlighting.toggle()
+            }
     }
 }
 
 
 #Preview {
-    Content()
+    MYContent()
 }
 
 
-private struct Content:View {
+struct MYContent:View {
     @State private var text = ""
     @FocusState private var isFocused: Bool
     var body: some View {
@@ -110,13 +167,17 @@ private struct Content:View {
 
             } trailingAction: {
                 Button {
-                    
+                    if isFocused {
+                        isFocused = false
+                    } else {
+                        
+                    }
                 } label: {
-                    Image(systemName: "mic.fill")
+                    Image(systemName: isFocused ? "checkmark" : "mic.fill")
                         .fontWeight(.medium)
-                        .foregroundStyle(Color.primary)
+                        .foregroundStyle( isFocused ? Color.green : Color.primary)
                         .frame(maxWidth: .infinity, maxHeight: .infinity)
-                        .background(fillColor, in: .circle)
+                        .background( isFocused ? Color.clear :  fillColor, in: .circle)
                 }
             } mainAction: {
                 

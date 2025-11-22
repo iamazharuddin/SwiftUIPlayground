@@ -67,7 +67,6 @@ struct ExpandableSearchBar2: View {
                                 x:5,
                                 y:5
                             )
-                            
                         )
                             .shadow(
                             .drop(

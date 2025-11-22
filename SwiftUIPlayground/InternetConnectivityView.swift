@@ -35,7 +35,7 @@ struct InternetConnectivityView: View {
             }
             .navigationTitle("Network Connectivity")
         }
-        .sheet(isPresented: .constant((isConnected ?? true))) {
+        .sheet(isPresented: .constant(!(isConnected ?? true))) {
             NoINternetConnectionView()
                 .presentationDetents([.height(310)])
                 .presentationCornerRadius(0)

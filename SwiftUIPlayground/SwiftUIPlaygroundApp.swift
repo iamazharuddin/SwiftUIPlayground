@@ -22,7 +22,8 @@ struct SwiftUIPlaygroundApp: App {
 //            CustomCurve()
 //            PlayGround()
 //            SpotifyHome()
-            CustomListCallingView()
+//            CustomListCallingView()
+            MYContent()
         }
     }
 }
