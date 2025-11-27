@@ -6,9 +6,10 @@
 //
 
 import SwiftUI
-
+import Combine
 @main
 struct SwiftUIPlaygroundApp: App {
+    @State private var cancellables: Set<AnyCancellable> = []
     var body: some Scene {
         WindowGroup {
 //            SlideToConfirm()
@@ -24,6 +25,10 @@ struct SwiftUIPlaygroundApp: App {
 //            SpotifyHome()
 //            CustomListCallingView()
             MYContent()
+                .onAppear() {
+                    runTest()
+                        .store(in: &cancellables)
+                }
         }
     }
 }

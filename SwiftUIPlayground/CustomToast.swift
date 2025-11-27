@@ -9,13 +9,41 @@ import SwiftUI
 
 struct CustomToast: View {
     var body: some View {
-        Text(/*@START_MENU_TOKEN@*/"Hello, World!"/*@END_MENU_TOKEN@*/)
+        Text("CustomToast")
     }
 }
 
 #Preview {
-    CustomToast()
+    ToastManagerView()
 }
 
 
+struct ToastManagerView: View {
+    @State private var window: UIWindow?
+    var body: some View {
+        ContentView()
+            .onAppear {
+                if let windowScene = UIApplication.shared.connectedScenes.first as? UIWindowScene, window == nil  {
+                    let window = PassThroughWindow(windowScene: windowScene)
+                    
+                    let rootController  = UIHostingController(rootView: CustomToast())
+                    rootController.view.backgroundColor = .red
+                    rootController.view.frame = windowScene.keyWindow?.bounds ?? .zero
+                    window.rootViewController = rootController
 
+                    window.isHidden = false
+                    self.window = window
+                }
+            }
+    }
+}
+
+
+class PassThroughWindow: UIWindow {
+    override func hitTest(_ point: CGPoint, with event: UIEvent?) -> UIView? {
+        guard let view =  super.hitTest(point, with: event) else {
+            return nil
+        }
+        return rootViewController?.view == view ? nil : view
+    }
+}

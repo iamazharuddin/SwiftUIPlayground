@@ -56,16 +56,16 @@ struct AnimatedText: View {
                     .frame(width: 100)
                     .offset(x: isAnimation ? getWidth() / 2  : -getWidth() / 2)
             )
-            .animation(.easeIn(duration: 3.0).repeatForever(autoreverses: false))
+            .animation(.easeInOut(duration: 3.0).repeatForever(autoreverses: false), value: isAnimation)
             .mask {
                 Text("Slide to shut down")
                     .foregroundStyle(.black)
                     .font(.largeTitle)
             }
+            .background(Color.gray)
             .onAppear() {
                 isAnimation.toggle()
             }
-            .background(Color.gray)
     }
     
     func getWidth() -> CGFloat {
