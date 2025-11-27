@@ -8,8 +8,8 @@
 import Foundation
 import Combine
 func waitTimeout<T>(
-    _ work: @escaping () async -> T,
-    seconds: TimeInterval
+    seconds: TimeInterval,
+    _ work: @escaping () async -> T
 ) async -> T? {
     await withTaskGroup(of: T?.self) { group in
         group.addTask { await work() }
