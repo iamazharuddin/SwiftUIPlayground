@@ -1,13 +1,37 @@
+////
+////  Git.swift
+////  SwiftUIPlayground
+////
+////  Created by Azharuddin Salahuddin on 07/12/25.
+////
 //
-//  Git.swift
-//  SwiftUIPlayground
 //
-//  Created by Azharuddin Salahuddin on 07/12/25.
+//import Foundation
+//func testGitMerger() {
+//    func changeFrom() {
+//         debugPrint("Change from main swift-concurrency...")
+//    }
+//}
 //
-
-import Foundation
-func testGitMerger() {
-    func changeFrom() {
-         debugPrint("Change from main branch...")
-    }
-}
+//
+////
+////  Git.swift
+////  SwiftUIPlayground
+////
+////  Created by Azharuddin Salahuddin on 07/12/25.
+////
+//
+//import Foundation
+//func testGitMerger() {
+//    func changeFrom() {
+//         debugPrint("Change from main branch...")
+//    }
+//}
+//
+//
+//func addNewMethod() {
+//    debugPrint("Add new method...")
+//}
+//
+//
+//
