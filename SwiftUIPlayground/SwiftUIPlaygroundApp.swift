@@ -24,11 +24,12 @@ struct SwiftUIPlaygroundApp: App {
 //            PlayGround()
 //            SpotifyHome()
 //            CustomListCallingView()
-            MYContent()
-                .onAppear() {
-                    runTest()
-                        .store(in: &cancellables)
+            VStack {
+                ConcurrenycView()
+                Button("Tap Me") {
+                    TaskClosureLifeCycle().incrementValueWithTask()
                 }
+            }
         }
     }
 }
