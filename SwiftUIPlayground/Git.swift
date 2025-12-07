@@ -12,6 +12,11 @@ func testGitMerger() {
     }
 }
 
+<<<<<<< HEAD
+=======
+
+
+>>>>>>> f7cadd9 (New method added from main)
 func addNewMethod() {
     debugPrint("Add new method...")
 }
