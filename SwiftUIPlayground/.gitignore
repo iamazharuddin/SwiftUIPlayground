@@ -1,0 +1,5 @@
+*.xcuserdatad
+*.xcuserdata
+*.xcworkspace
+*.xcodeproj/project.xcworkspace/xcuserdata
+
