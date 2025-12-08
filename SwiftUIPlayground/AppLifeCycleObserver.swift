@@ -17,7 +17,7 @@ class AppLifeCycleObserver {
     func observeApplicationState() {
        NotificationCenter.default.publisher(for: UIApplication.willTerminateNotification, object: nil)
            .sink { [weak self] _ in
-               debugPrint("willTerminateNotification")
+               debugPrint("willTerminateNotification1")
            }
            .store(in: &cancellables)
        
