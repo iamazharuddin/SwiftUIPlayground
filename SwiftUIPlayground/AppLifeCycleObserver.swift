@@ -23,7 +23,6 @@ class AppLifeCycleObserver {
        
        NotificationCenter.default.publisher(for: UIApplication.didEnterBackgroundNotification, object: nil)
            .sink { [weak self] _ in
-               guard let self = self else { return }
                debugPrint("didEnterBackgroundNotification")
            }
            .store(in: &cancellables)
