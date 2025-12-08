@@ -35,5 +35,12 @@ class AppLifeCycleObserver {
                debugPrint("willEnterForegroundNotification")
            }
            .store(in: &cancellables)
+        
+        NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification, object: nil)
+            .sink { [weak self] _ in
+                guard let self = self else { return }
+                debugPrint("didBecomeActiveNotification")
+            }
+            .store(in: &cancellables)
    }
 }
