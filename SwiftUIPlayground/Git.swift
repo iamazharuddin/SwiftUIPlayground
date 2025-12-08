@@ -15,7 +15,7 @@ func testGitMerger() {
 
 
 func addNewMethod() {
-    debugPrint("Add new method...")
+    debugPrint("Add new method => main branch...")
 }
 
 
