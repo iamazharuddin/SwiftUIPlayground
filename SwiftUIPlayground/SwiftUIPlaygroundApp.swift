@@ -10,6 +10,7 @@ import Combine
 @main
 struct SwiftUIPlaygroundApp: App {
     @State private var cancellables: Set<AnyCancellable> = []
+    let observer = AppLifeCycleObserver()
     var body: some Scene {
         WindowGroup {
 //            SlideToConfirm()
@@ -29,6 +30,9 @@ struct SwiftUIPlaygroundApp: App {
                 Button("Tap Me") {
                     TaskClosureLifeCycle().incrementValueWithTask()
                 }
+            }
+            .onAppear() {
+                observer.observeApplicationState()
             }
         }
     }
