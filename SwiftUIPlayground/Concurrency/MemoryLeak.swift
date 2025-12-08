@@ -9,6 +9,7 @@ class MemoryLeak {
     var number = 0
     
     init() {
+        debugPrint("Check memory leak")
         debugPrint("MemoryLeak init")
         runTask()
     }
