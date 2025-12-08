@@ -11,4 +11,3 @@ func testGitMerger() {
          debugPrint("Change from main branch...")
     }
 }
-
