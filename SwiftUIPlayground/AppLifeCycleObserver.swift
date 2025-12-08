@@ -37,7 +37,7 @@ class AppLifeCycleObserver {
         NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification, object: nil)
             .sink { [weak self] _ in
                 guard let self = self else { return }
-                debugPrint("didBecomeActiveNotification")
+                debugPrint("didBecomeActiveNotification2")
             }
             .store(in: &cancellables)
    }
