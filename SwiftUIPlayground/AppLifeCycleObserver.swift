@@ -11,7 +11,7 @@ import UIKit
 class AppLifeCycleObserver {
     private var cancellables: Set<AnyCancellable> = []
     init() {
-
+        observeApplicationState()
     }
     
     func observeApplicationState() {
