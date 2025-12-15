@@ -7,7 +7,7 @@
 
 import SwiftUI
 import Combine
-
+import ComposableArchitecture
 struct AlertMessage: Identifiable {
     var id: UUID = UUID()
     let data: Data
@@ -24,7 +24,13 @@ struct SwiftUIPlaygroundApp: App {
     @State private var alertMessage:AlertMessage?
     var body: some Scene {
         WindowGroup {
-            CounterViewTCA()
+            CounterViewTCA(
+                store: Store(
+                    initialState: CounterFeature.State(),
+                    reducer: {
+                        CounterFeature()
+                    })
+            )
         }
     }
 }

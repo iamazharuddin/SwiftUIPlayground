@@ -19,7 +19,7 @@ struct CounterFeature {
     }
     
     
-    enum Action {
+    enum Action: Equatable {
         case incrementButtonTapped
         case incrementResponse(Int)
     }
@@ -32,7 +32,7 @@ struct CounterFeature {
                 state.isLoading = true
                 
                 return .run { send in
-                    try await Task.sleep(nanoseconds: 2_000_000_000)
+                    try await Task.sleep(nanoseconds: 500_000_000)
                     await send(.incrementResponse(1))
                 }
                 
@@ -46,18 +46,14 @@ struct CounterFeature {
 }
 
 import SwiftUI
-
 struct CounterViewTCA: View {
-
     let store: StoreOf<CounterFeature>
-
     var body: some View {
         VStack(spacing: 20) {
-
             Text("Count: \(store.count)")
                 .font(.largeTitle)
 
-            if store.isLoading {
+            if  store.isLoading {
                 ProgressView()
             }
 
@@ -69,3 +65,5 @@ struct CounterViewTCA: View {
         .padding()
     }
 }
+
+
