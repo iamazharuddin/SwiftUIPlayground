@@ -29,8 +29,8 @@ class Download  {
 
 
 struct DownloadInfo {
-     let url: URL
-     var downloadState: DownloadState = .none
+    let url: URL
+    var downloadState: DownloadState = .none
 }
 
 protocol DownloadStateUpdateDelegate: AnyObject {
@@ -38,46 +38,83 @@ protocol DownloadStateUpdateDelegate: AnyObject {
 }
 
 class   DownloadService: NSObject {
-        private let downloadSubject = PassthroughSubject<DownloadInfo, Never>()
-        var downloadPublisher: AnyPublisher<DownloadInfo, Never> {
-            downloadSubject.eraseToAnyPublisher()
+    private let downloadSubject = PassthroughSubject<DownloadInfo, Never>()
+    var downloadPublisher: AnyPublisher<DownloadInfo, Never> {
+        downloadSubject.eraseToAnyPublisher()
+    }
+    static let shared  = DownloadService()
+    private override init() {}
+    var downloads : [URL: Download] = [:]
+    lazy var session: URLSession = {
+        let configuration = URLSessionConfiguration.default
+        configuration.sessionSendsLaunchEvents = true
+        configuration.waitsForConnectivity = true
+        configuration.isDiscretionary = true
+        let session = URLSession(configuration:configuration, delegate: self, delegateQueue: nil)
+        return session
+    }()
+    
+    func startDownload(  _ urlString: String) {
+        //           guard let url = URL(string: urlString) else { return }
+        //           let download = Download(url: url)
+        //           let task: URLSessionDownloadTask = session.downloadTask(with: download.url)
+        //           download.downloadTask = task
+        //           download.downloadTask?.resume()
+        //           downloads[url] = download
+        
+        
+        
+        
+        Task {
+            do {
+                let url =  URL(string: urlString)!
+                let (asyncBytes, urlResponse) = try await session.bytes(from: url)
+                let length = (urlResponse.expectedContentLength)
+                let gb_total = Double(length) / 1024 / 1024 / 1024
+                
+                var data = Data()
+                data.reserveCapacity(Int(length))
+                
+                var downloaded:Int64 = 0
+                for  try await byte in asyncBytes {
+                    data.append(byte)
+                    let progress = Double(data.count) / Double(length)
+                    let gb = Double(data.count) / 1024 / 1024 / 1024
+                    let formatted_gb_total = String(format: "%.3f", gb_total)
+                    let formatted_gg_loaded = String(format: "%.3f", gb)
+                    
+                    try await Task.sleep(for: .seconds(0.000005))
+                    downloadSubject.send(DownloadInfo(url: url, downloadState:.downloading(progress: progress)))
+                }
+
+                let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
+               
+                let fileURL  = documentsDirectory.appendingPathComponent(url.lastPathComponent)
+                
+                try? data.write(to: fileURL)
+                try? FileManager.default.moveItem(at: url, to: fileURL)
+                downloadSubject.send(DownloadInfo(url: url, downloadState: .downloaded))
+            } catch {
+                
+            }
         }
-        static let shared  = DownloadService()
-        private override init() {}
-        var downloads : [URL: Download] = [:]
-        lazy var session: URLSession = {
-            let configuration = URLSessionConfiguration.default
-            configuration.sessionSendsLaunchEvents = true
-            configuration.waitsForConnectivity = true
-            configuration.isDiscretionary = true
-            let session = URLSession(configuration:configuration, delegate: self, delegateQueue: nil)
-            return session
-        }()
+    }
     
-       func startDownload(  _ urlString: String) {
-           guard let url = URL(string: urlString) else { return }
-           let download = Download(url: url)
-           let task: URLSessionDownloadTask = session.downloadTask(with: download.url)
-           download.downloadTask = task
-           download.downloadTask?.resume()
-           downloads[url] = download
-       }
-    
-      func pauseDownload(  _ urlString: String) {
-          Task {
-              guard let url = URL(string: urlString), var download = downloads[url] else { return }
-              let data =  await download.downloadTask?.cancelByProducingResumeData()
-              download.resumedData = data
-              download.state = .paused
-              downloads[url] = download
-          }
-     }
+    func pauseDownload(  _ urlString: String) {
+        Task {
+            guard let url = URL(string: urlString), var download = downloads[url] else { return }
+            let data =  await download.downloadTask?.cancelByProducingResumeData()
+            download.resumedData = data
+            download.state = .paused
+            downloads[url] = download
+        }
+    }
     
     func cancelDownload( _ urlString: String) {
-         guard let url = URL(string: urlString), var download = downloads[url] else { return }
-         download.downloadTask?.cancel()
-         download.state = .cancelled
-         downloads[url] = download
+        guard let url = URL(string: urlString), var download = downloads[url] else { return }
+        download.downloadTask?.cancel()
+        download.state = .cancelled
+        downloads[url] = download
     }
     
     func resumeDownload( _ urlString:String) {
@@ -94,10 +131,10 @@ class   DownloadService: NSObject {
 
 extension DownloadService : URLSessionDownloadDelegate  {
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask,  didFinishDownloadingTo location: URL) {
-         if let url = downloadTask.originalRequest?.url {
-             let urlString = downloadTask.originalRequest?.url?.absoluteString
-             debugPrint("DEBUG: \(urlString)")
-             downloadSubject.send(DownloadInfo(url: url, downloadState: .downloaded))
+        if let url = downloadTask.originalRequest?.url {
+            let urlString = downloadTask.originalRequest?.url?.absoluteString
+            debugPrint("DEBUG: \(urlString)")
+            downloadSubject.send(DownloadInfo(url: url, downloadState: .downloaded))
         }
     }
     
@@ -115,5 +152,6 @@ extension DownloadService : URLSessionDownloadDelegate  {
 // Download - Model
 // DownloadService - Service
 // DownloadListUI <- DownloadViewModel -> DownloadService
+
 
 
