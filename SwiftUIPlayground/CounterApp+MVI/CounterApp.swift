@@ -33,9 +33,9 @@ class CounterViewModel: ObservableObject {
         var newState = state, effects = [CounterEffect]()
         switch intent {
         case .increment:
-            newState.count += 1
+            newState.count = clamp(min: 0, max: 10, value: newState.count + 1)
         case .decrement:
-            newState.count -= 1
+            newState.count = clamp(min: 0, max: 10, value: newState.count - 1)
         case .reset:
             newState.count = 0
         case .incrementAfterDelay:
@@ -43,7 +43,7 @@ class CounterViewModel: ObservableObject {
             let effect = CounterEffect(run: run)
             effects.append(effect)
        case .didFinishIncrement:
-            newState.count += 1
+            newState.count = clamp(min: 0, max: 10, value: newState.count + 1)
             newState.isLoading = false
         }
         return (newState, effects)
@@ -119,3 +119,13 @@ struct CounterView: View {
     CounterView()
 }
 
+
+func clamp<T:Comparable>(min:T, max:T, value:T) -> T {
+    if value < min {
+        return min
+    }
+    if value > max {
+        return max
+    }
+    return value
+}
