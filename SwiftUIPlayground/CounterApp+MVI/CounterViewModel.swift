@@ -49,12 +49,3 @@ class CounterViewModel: ObservableObject {
 
 
 
-func clamp<T:Comparable>(min:T, max:T, value:T) -> T {
-    if value < min {
-        return min
-    }
-    if value > max {
-        return max
-    }
-    return value
-}

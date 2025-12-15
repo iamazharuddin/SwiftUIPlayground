@@ -24,8 +24,7 @@ struct SwiftUIPlaygroundApp: App {
     @State private var alertMessage:AlertMessage?
     var body: some Scene {
         WindowGroup {
-//            CustomVideoPlayer()
-            CounterView()
+            CounterViewTCA()
         }
     }
 }
