@@ -25,32 +25,33 @@ class CounterViewModel: ObservableObject {
         let (state, effects) =  reducer(state, intent)
         self.state = state
         for effect in effects {
-            effect.run { action in
-                self.send(action)
-            }
+            effect.run(send)
         }
     }
     
     private func reducer( _ state: CounterState, _ intent: CounterIntent) -> (CounterState, [CounterEffect]) {
+        var newState = state, effects = [CounterEffect]()
         switch intent {
         case .increment:
-            return (.init(isLoading: false, count: state.count + 1), [])
+            newState.count += 1
         case .decrement:
-            return (.init(isLoading: false, count: state.count - 1), [])
+            newState.count -= 1
         case .reset:
-            return (.init(isLoading: false, count: 0), [])
+            newState.count = 0
         case .incrementAfterDelay:
-            let updatedState = CounterState(isLoading: true, count: state.count)
+            newState.isLoading = true
             let effect = CounterEffect(run: run)
-           return (updatedState, [effect])
+            effects.append(effect)
        case .didFinishIncrement:
-            return (.init(isLoading: false, count: state.count + 1), [])
+            newState.count += 1
+            newState.isLoading = false
         }
+        return (newState, effects)
     }
     
-    private func run(callback: @escaping (CounterIntent) -> Void)  {
+    private func run(send: @escaping (CounterIntent) -> Void)  {
          DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-             callback(.didFinishIncrement)
+             send(.didFinishIncrement)
          }
     }
 }
