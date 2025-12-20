@@ -1,5 +1,10 @@
-import PlaygroundSupport
-PlaygroundPage.current.needsIndefiniteExecution = true
+//
+//  NetworkService.swift
+//  SwiftUIPlayground
+//
+//  Created by Azharuddin Salahuddin on 19/12/25.
+//
+
 import Foundation
 import Combine
 
@@ -24,7 +29,7 @@ class NetworkService {
         URLSession.shared.dataTaskPublisher(for: url1)
             .flatMap { _ in
                 // second API call starts after first finishes
-                URLSession.shared.dataTaskPublisher(for: url2)
+               return  URLSession.shared.dataTaskPublisher(for: url2)
             }
             .sink(
                 receiveCompletion: { completion in
@@ -40,11 +45,8 @@ class NetworkService {
 }
 
 
-class ViewModel {
+class NewViewModel {
       func apiCall() {
          NetworkService().apiCall2()
     }
 }
-
-let vm = ViewModel()
-vm.apiCall()

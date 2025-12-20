@@ -8,8 +8,6 @@
 
 import Foundation
 import Combine
-
-
 class CounterViewModel: ObservableObject {
     @Published var state: CounterState = .initial
     func send( _ intent: CounterIntent) {

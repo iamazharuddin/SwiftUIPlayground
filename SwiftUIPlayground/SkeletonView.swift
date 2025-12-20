@@ -58,7 +58,7 @@ struct SkeletonView<S: Shape>: View {
 
 #Preview {
     @Previewable
-    @State var isAnimating: Bool = false
+    @State var isAnimating: Bool = true
     VStack(spacing: 20) {
           CardSkeletonView()
           CardSkeletonView()

@@ -71,19 +71,19 @@ class MutableArray {
 }
 
 //Counter().run()
-
-let queue = DispatchQueue(label: "com.example.queue", attributes: .concurrent)
-func run() {
-    var mutableArray = MutableArray()
-    queue.async {
-        mutableArray.addToArray()
+let test = {
+    let queue = DispatchQueue(label: "com.example.queue", attributes: .concurrent)
+    func run() {
+        var mutableArray = MutableArray()
+        queue.async {
+            mutableArray.addToArray()
+        }
+        queue.async {
+            mutableArray.removeFromArray()
+        }
     }
-    queue.async {
-        mutableArray.removeFromArray()
-    }
- }
-
-run()
-
+    
+    run()
+}
 // DispatchSemaphore is synchronisation mechanism to control the number threads that can access a shared resource
 // Used to manage thread execution that can access the shared resource
