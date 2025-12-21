@@ -121,7 +121,7 @@ struct SlideToConfirm: View {
             .frame(height: size.height)
             .task {
                 withAnimation(Animation.linear(duration: 2.5).repeatForever(autoreverses: false)) {
-                    animatedText.toggle()
+                    animatedText = true
                 }
             }
     }
@@ -140,5 +140,142 @@ struct SlideToConfirm: View {
 }
 
 #Preview {
-    SlideToConfirm()
+    VStack(spacing: 40){
+        SlideToConfirm()
+        SlideToConfirm1()
+    }
 }
+
+
+
+struct SlideToConfirm1: View {
+    @State private var offsetX: CGFloat = 0
+    @State private var animatedText: Bool = false
+    var body: some View {
+        GeometryReader {
+            let size = $0.size
+            ZStack(alignment: .leading) {
+                Capsule()
+                    .fill(Color.gray.opacity(0.5))
+                    .frame(width: size.width, height: size.height)
+                
+                let maxLen = size.width - size.height
+                let progress = offsetX / maxLen
+                
+                Capsule()
+                    .fill(.green)
+                    .frame(width: size.height +  maxLen * progress )
+                
+                HStack {
+                    knobView(size, progress: progress)
+                    shimmerTextView(size: size, knobSize: size.height, progress)
+                }
+            }
+        }
+        .frame(height: 50)
+        .frame(maxWidth: 300, alignment: .center)
+    }
+    
+
+    
+    private func shimmerTextView(size:CGSize,  knobSize: CGFloat,  _ progress:CGFloat) -> some View {
+//         Text("Slide to Pay")
+//            .font(.system(size: 18, weight: .semibold))
+//            .foregroundStyle(.gray)
+//            .kerning(1)
+//            .overlay {
+//                Rectangle()
+//                    .frame(width: 15)
+//                    .visualEffect({ content, proxy in
+//                        content
+//                            .offset(x: -proxy.size.width)
+//                            .offset(x: isAnimating ? proxy.size.width * 3 : 0)
+//                    })
+//                    .animation(
+//                        .easeInOut(
+//                            duration: 2.5
+//                        ).repeatForever(
+//                            autoreverses: false
+//                        ),
+//                        value: isAnimating
+//                    )
+//                    .onAppear() {
+//                        isAnimating.toggle()
+//                    }
+//            }
+//            .mask {
+//                Text("Slide to Pay")
+//            }
+//            .frame(maxWidth: .infinity)
+//            .frame(height: size.height)
+        
+        Text("Slide to Pay")
+           .foregroundStyle(.gray.opacity(0.6))
+           .overlay(content: {
+               Rectangle()
+                   .frame(height: 15)
+                   .rotationEffect(.init(degrees: 90))
+                   .visualEffect { content, proxy in
+                       content
+                           .offset(x: -proxy.size.width/1.8)
+                           .offset(x: animatedText ? proxy.size.width * 1.2 : 0)
+                   }
+//                   .mask {
+//                       Text("Slide to Pay")
+//                   }
+//                   .blendMode(.softLight)
+           })
+           .fontWeight(.semibold)
+           .frame(maxWidth: .infinity)
+//           .padding(.trailing, size.height / 2)
+           .mask {
+               Rectangle()
+                    .scale( 1 - progress, anchor: .trailing)
+           }
+           .frame(height: size.height)
+           .task {
+               withAnimation(Animation.linear(duration: 2.5).repeatForever(autoreverses: false)) {
+                   animatedText = true
+               }
+           }
+    }
+    
+    private func knobView(_ size:CGSize,  progress: Double = 0) -> some View {
+         Capsule()
+            .fill(.background)
+            .padding(6)
+            .frame(width: size.height, height: size.height)
+            .overlay(content: {
+                Image(systemName: "chevron.right")
+                    .font(.title3.bold())
+                    .blur(radius: 10 * progress)
+                    .opacity(1 - progress)
+                
+                Image(systemName: "checkmark")
+                    .font(.title3.bold())
+                    .blur(radius: 10 * (1-progress))
+                    .opacity(progress)
+            })
+            .offset(x: offsetX)
+            .gesture(
+                DragGesture()
+                    .onChanged { value in
+                        let knobSize = size.height
+                     let maxLen = size.width - knobSize
+                     offsetX =  min(max(0,value.translation.width), maxLen)
+                        print(value.translation.width)
+                }
+                .onEnded({ value in
+                    let knobSize = size.height
+                    let maxLen = size.width - knobSize
+                    if  offsetX == maxLen {
+                        print("confirm: \(value.translation.width )")
+                    } else {
+                        offsetX = 0
+                    }
+                })
+            )
+    }
+}
+
+

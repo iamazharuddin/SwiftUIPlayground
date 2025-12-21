@@ -11,7 +11,7 @@ import UIKit
 class AppLifeCycleObserver {
     private var cancellables: Set<AnyCancellable> = []
     init() {
-
+        observeApplicationState()
     }
     
     func observeApplicationState() {
@@ -29,15 +29,15 @@ class AppLifeCycleObserver {
        
        NotificationCenter.default.publisher(for: UIApplication.willEnterForegroundNotification, object: nil)
            .sink { [weak self] _ in
-               guard let self = self else { return }
-               debugPrint("willEnterForegroundNotification")
+              
+               
            }
            .store(in: &cancellables)
         
         NotificationCenter.default.publisher(for: UIApplication.didBecomeActiveNotification, object: nil)
             .sink { [weak self] _ in
-                guard let self = self else { return }
-                debugPrint("didBecomeActiveNotification2")
+               
+               
             }
             .store(in: &cancellables)
    }
