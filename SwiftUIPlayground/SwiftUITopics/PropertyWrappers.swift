@@ -47,7 +47,6 @@ struct PostsView: View {
     }
     
     func update() {
-        debugPrint("update")
         if loader.urlSession == nil || loader.endpoint == nil {
             loader.urlSession = urlSession
             loader.endpoint = endpoint
