@@ -2,3 +2,10 @@ Networing using Comnine
 https://medium.com/@utkarshdu2631/network-layer-using-combine-e261e6a15474
 Architecture
 https://medium.com/@anujiosdeveloper/heres-a-deep-dive-ios-architecture-interview-question-set-ideal-for-mid-to-senior-ios-developers-df24eabf365e
+GCD
+https://www.freecodecamp.org/news/ios-concurrency/
+System Design
+https://github.com/weeeBox/mobile-system-design/tree/master/topics
+DeepLink
+https://www.donnywals.com/handling-deeplinks-in-your-app/
+https://www.avanderlee.com/swiftui/deeplink-url-handling/

@@ -23,11 +23,7 @@ struct SwiftUIPlaygroundApp: App {
     @State private var alertMessage:AlertMessage?
     var body: some Scene {
         WindowGroup {
-            PlayGround()
-                .onAppear() {
-                    let vm = NewViewModel()
-                    vm.apiCall()
-                }
+            PostsView()
         }
     }
 }
