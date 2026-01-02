@@ -14,3 +14,5 @@ https://www.donnywals.com/building-a-token-refresh-flow-with-async-await-and-swi
 Image Loader
 https://www.donnywals.com/using-swifts-async-await-to-build-an-image-loader/
 https://www.donnywals.com/actor-reentrancy-in-swift-explained/
+Rerty Backoff Jitter
+https://medium.com/@vialyx/managing-api-retries-with-backoff-jetifier-strategy-in-macos-apps-using-swift-4d9f1638821c
