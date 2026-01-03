@@ -6,7 +6,7 @@
 //
 
 import Foundation
-struct Token {
+fileprivate struct Token {
     let validUntil: Date
     let id: UUID
     let value:String = ""
@@ -27,7 +27,7 @@ actor AuthManager {
     private var currentToken: Token?
     private var refreshTask: Task<Token, Error>?
 
-    func validToken() async throws -> Token {
+    fileprivate func validToken() async throws -> Token {
         if let handle = refreshTask {
             return try await handle.value
         }
@@ -43,7 +43,7 @@ actor AuthManager {
         return try await refreshToken()
     }
 
-    func refreshToken() async throws -> Token {
+    fileprivate func refreshToken() async throws -> Token {
         if  let refreshTask {
             return try await refreshTask.value
         }
@@ -63,3 +63,40 @@ actor AuthManager {
     }
 }
 
+import Foundation
+class Networking {
+
+    let authManager: AuthManager
+
+    init(authManager: AuthManager) {
+        self.authManager = authManager
+    }
+
+    func loadAuthorized<T: Decodable>(_ url: URL, allowRetry: Bool = true) async throws -> T {
+        let request = try await authorizedRequest(from: url)
+        let (data, urlResponse) = try await URLSession.shared.data(for: request)
+        
+        if let httpResponse = urlResponse as? HTTPURLResponse, httpResponse.statusCode == 401 {
+            if allowRetry {
+                 _ = try await authManager.refreshToken()
+                return try await loadAuthorized(url, allowRetry: false)
+            }
+            
+            throw AuthError.invalidToken
+        }
+
+        let decoder = JSONDecoder()
+        let response = try decoder.decode(T.self, from: data)
+
+        return response
+    }
+    
+
+
+    private func authorizedRequest(from url: URL) async throws -> URLRequest {
+        var urlRequest = URLRequest(url: url)
+        let token = try await authManager.validToken()
+        urlRequest.setValue("Bearer \(token.value)", forHTTPHeaderField: "Authorization")
+        return urlRequest
+    }
+}

@@ -1,0 +1,74 @@
+//
+//  LoginApi.swift
+//  SwiftUIPlayground
+//
+//  Created by Azharuddin Salahuddin on 03/01/26.
+//
+
+/*
+ POST https://api.escuelajs.co/api/v1/auth/login
+ Content-Type: application/json
+
+ {
+   "email": "john@mail.com",
+   "password": "changeme"
+ }
+ */
+import Foundation
+struct LoginResponse: Decodable {
+    let accessToken: String
+    let refreshToken: String
+    
+    enum CodingKeys: String, CodingKey {
+        case accessToken = "access_token"
+        case refreshToken = "refresh_token"
+    }
+}
+
+class LoginApi {
+    func login() async throws -> LoginResponse {
+         let url = URL(string: "https://api.escuelajs.co/api/v1/auth/login")!
+         var request = URLRequest(url: url)
+         request.httpMethod = "POST"
+         let jsonData: [String: Any] = [
+            "email": "john@mail.com",
+            "password": "changeme"
+         ]
+         request.httpBody = try? JSONSerialization.data(withJSONObject: jsonData, options: [])
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+         do {
+            let result: (Data, URLResponse) = try await URLSession.shared.data(for: request)
+            debugPrint(String(data: result.0, encoding: .utf8)!)
+             
+           let model = try JSONDecoder().decode(LoginResponse.self, from: result.0)
+           debugPrint(model)
+           return model
+         } catch {
+            debugPrint(error.localizedDescription)
+             throw error
+         }
+    }
+    
+    /*
+     GET https://api.escuelajs.co/api/v1/auth/profile
+     Authorization: Bearer {your_access_token}
+     */
+}
+
+import SwiftUI
+struct Login:View {
+      let loginApi = LoginApi()
+      var body: some View {
+          Button(action: {
+              Task {
+                  do{
+                      try await loginApi.login()
+                  } catch {
+                      debugPrint(error)
+                  }
+              }
+          }, label: {
+              Text("Login")
+          })
+    }
+}

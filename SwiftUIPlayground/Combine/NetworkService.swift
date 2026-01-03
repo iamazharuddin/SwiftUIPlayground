@@ -19,7 +19,6 @@ class NetworkService {
                 print(data.count)
             }
             .store(in: &cancellables)
-        
     }
     
     func apiCall2() {

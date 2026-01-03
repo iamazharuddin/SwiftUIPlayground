@@ -21,14 +21,11 @@ struct SwiftUIPlaygroundApp: App {
     
     let urlString = "https://www.adobe.com/support/products/enterprise/knowledgecenter/media/c4611_sample_explain.pdf"
     
-    init() {
-        performRequest()
-    }
-    
     @State private var alertMessage:AlertMessage?
+    private let mockTest = TestCombineNetworking()
     var body: some Scene {
         WindowGroup {
-            PostsView()
+            Login()
         }
     }
 }
