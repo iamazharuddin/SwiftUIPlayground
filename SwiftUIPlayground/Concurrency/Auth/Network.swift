@@ -6,7 +6,6 @@
 //
 
 import Foundation
-
 enum NetworkError: Error {
     case invalidToken
     case invalidResponse

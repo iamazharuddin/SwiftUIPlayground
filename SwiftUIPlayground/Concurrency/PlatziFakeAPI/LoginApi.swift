@@ -8,10 +8,10 @@
 /*
  POST https://api.escuelajs.co/api/v1/auth/login
  Content-Type: application/json
-
+ 
  {
-   "email": "john@mail.com",
-   "password": "changeme"
+ "email": "john@mail.com",
+ "password": "changeme"
  }
  */
 import Foundation
@@ -26,30 +26,31 @@ struct LoginResponse: Decodable {
 }
 
 class LoginApi {
-     private let authManager: AuthManager
-     init(authManager: AuthManager = .shared) { self.authManager = authManager }
-     func login() async throws -> LoginResponse {
-         let url = URL(string: "https://api.escuelajs.co/api/v1/auth/login")!
-         var request = URLRequest(url: url)
-         request.httpMethod = "POST"
-         let jsonData: [String: Any] = [
+    private let authManager: AuthManager
+    init(authManager: AuthManager = .shared) { self.authManager = authManager }
+    func login() async throws -> LoginResponse {
+        let url = URL(string: "https://api.escuelajs.co/api/v1/auth/login")!
+        var request = URLRequest(url: url)
+        request.httpMethod = "POST"
+        let jsonData: [String: Any] = [
             "email": "john@mail.com",
             "password": "changeme"
-         ]
-         request.httpBody = try? JSONSerialization.data(withJSONObject: jsonData, options: [])
-         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-         do {
+        ]
+        request.httpBody = try? JSONSerialization.data(withJSONObject: jsonData, options: [])
+        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        do {
             let result: (Data, URLResponse) = try await URLSession.shared.data(for: request)
             debugPrint(String(data: result.0, encoding: .utf8)!)
-             
-           let model = try JSONDecoder().decode(LoginResponse.self, from: result.0)
-           debugPrint(model)
-             await authManager.saveToken(Token(accessToken: model.accessToken, refreshToken: model.refreshToken))
-           return model
-         } catch {
+            
+            let model = try JSONDecoder().decode(LoginResponse.self, from: result.0)
+            debugPrint(model)
+            await authManager.saveToken(Token(accessToken: model.accessToken, refreshToken: model.refreshToken))
+            
+            return model
+        } catch {
             debugPrint(error.localizedDescription)
-             throw error
-         }
+            throw error
+        }
     }
     
     /*
@@ -58,47 +59,16 @@ class LoginApi {
      */
 }
 
-import SwiftUI
-struct Login:View {
-      let loginApi = LoginApi()
-      let network = Network(authManager: .shared)
-      @State private var profile:Profile?
-      var body: some View {
-          VStack {
-              if profile == nil {
-                  Button(action: {
-                      Task {
-                          do {
-                               _ = try await loginApi.login()
-                              self.profile = try await network.loadRequest("https://api.escuelajs.co/api/v1/auth/profile", type: Profile.self, allowRetry: true)
-                          } catch {
-                              debugPrint(error)
-                          }
-                      }
-                  }, label: {
-                      Text("Login")
-                  })
-                  
-              }
-              
-              Text("Profile Detail: \(profile?.name ?? "No Profile")")
-          }
-    }
-}
 
-struct Profile:Decodable {
-    let id:Int
-    let name:String
-}
 
 /*
  
  {
-   "id": 1,
-   "email": "john@mail.com",
-   "password": "changeme",
-   "name": "Jhon",
-   "role": "customer",
-   "avatar": "https://api.lorem.space/image/face?w=640&h=480&r=867"
+ "id": 1,
+ "email": "john@mail.com",
+ "password": "changeme",
+ "name": "Jhon",
+ "role": "customer",
+ "avatar": "https://api.lorem.space/image/face?w=640&h=480&r=867"
  }
  */

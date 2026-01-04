@@ -6,7 +6,8 @@
 //
 
 import Foundation
-struct Token:Decodable {
+struct Token:Identifiable, Codable {
+     var id = UUID()
      let accessToken: String
      let refreshToken: String
     
@@ -22,19 +23,14 @@ enum AuthError:Error  {
 actor AuthManager {
      static let shared = AuthManager()
      private init() {}
-     private var currentToken:Token?
      private var refreshTask: Task<Token,Error>?
      func validToken() async throws -> Token {
          if  let refreshTask  {
              return try await refreshTask.value
          }
-         
-         guard let currentToken = currentToken else {
-             throw AuthError.missingToken
-         }
-         
-         if currentToken.isValid {
-            return currentToken
+                  
+         if let token = getToken() {
+            return token
          }
          return try await refreshToken()
      }
@@ -48,17 +44,35 @@ actor AuthManager {
              var request = URLRequest(url: url)
              request.httpMethod = "POST"
              request.setValue("application/json", forHTTPHeaderField: "Content-Type")
-             request.httpBody = try JSONSerialization.data(withJSONObject: ["refreshToken": currentToken?.refreshToken ?? ""])
+             request.httpBody = try JSONSerialization.data(withJSONObject: ["refreshToken": getToken()?.refreshToken ?? ""])
              let (data, _) = try await URLSession.shared.data(for: request)
-             return try  JSONDecoder().decode(Token.self, from: data)
+             let model =  try  JSONDecoder().decode(Token.self, from: data)
+             saveToken(model)
+             return model
          }
          refreshTask = task
          return try await task.value
      }
     
      func saveToken(_ token:Token) {
-          self.currentToken = token
+         do {
+             try KeychainStore.save(token)
+             print("Token saved successfully")
+         } catch {
+             print(error.localizedDescription)
+         }
      }
+    
+     func getToken() -> Token? {
+        do {
+            let token = try KeychainStore.load()
+            print("Token retrieved successfully")
+            return token
+        } catch {
+            print(error.localizedDescription)
+            return nil
+        }
+    }
 }
 
 
