@@ -6,6 +6,65 @@
 //
 
 import Foundation
+struct Token:Decodable {
+     let accessToken: String
+     let refreshToken: String
+    
+     var isValid: Bool {
+          true
+     }
+}
+
+enum AuthError:Error  {
+     case missingToken
+}
+
+actor AuthManager {
+     static let shared = AuthManager()
+     private init() {}
+     private var currentToken:Token?
+     private var refreshTask: Task<Token,Error>?
+     func validToken() async throws -> Token {
+         if  let refreshTask  {
+             return try await refreshTask.value
+         }
+         
+         guard let currentToken = currentToken else {
+             throw AuthError.missingToken
+         }
+         
+         if currentToken.isValid {
+            return currentToken
+         }
+         return try await refreshToken()
+     }
+     
+     func refreshToken() async throws -> Token {
+         if  let task = refreshTask {
+             return try await task.value
+         }
+         let task =  Task { () async throws -> Token in
+             let url = URL(string: "")!
+             var request = URLRequest(url: url)
+             request.httpMethod = "POST"
+             request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+             request.httpBody = try JSONSerialization.data(withJSONObject: ["refreshToken": currentToken?.refreshToken ?? ""])
+             let (data, _) = try await URLSession.shared.data(for: request)
+             return try  JSONDecoder().decode(Token.self, from: data)
+         }
+         refreshTask = task
+         return try await task.value
+     }
+    
+     func saveToken(_ token:Token) {
+          self.currentToken = token
+     }
+}
+
+
+
+/*
+import Foundation
 fileprivate struct Token {
     let validUntil: Date
     let id: UUID
@@ -100,3 +159,4 @@ class Networking {
         return urlRequest
     }
 }
+*/
