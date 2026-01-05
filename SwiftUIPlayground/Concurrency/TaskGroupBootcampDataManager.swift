@@ -72,11 +72,11 @@ class TaskGroupBootcampViewModel: ObservableObject {
     
     
     func getImages() async {
-        debugPrint("Thread current 1: \(Thread.current)")
+        Log.info("Thread current 1: \(Thread.current)")
         if let images = try? await manager.fetchImagesWithTaskGroup() {
             await MainActor.run {
                 self.images.append(contentsOf: images)
-                debugPrint("Thread current 2: \(Thread.current)")
+                Log.info("Thread current 2: \(Thread.current)")
             }
         }
     }
@@ -101,7 +101,7 @@ struct TaskGroupBootcamp: View {
             }
             .navigationTitle("Task Group 🥳")
             .task {
-                debugPrint("Thread current 3: \(Thread.current)")
+                Log.info("Thread current 3: \(Thread.current)")
                 await viewModel.getImages()
             }
         }

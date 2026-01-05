@@ -31,6 +31,7 @@ struct  LoginApiRequest: Endpoint {
     var body: Data?
 }
 
+/*
 class LoginApi {
     private let authManager: AuthManager
     init(authManager: AuthManager = .shared) { self.authManager = authManager }
@@ -46,15 +47,15 @@ class LoginApi {
         request.setValue("application/json", forHTTPHeaderField: "Content-Type")
         do {
             let result: (Data, URLResponse) = try await URLSession.shared.data(for: request)
-            debugPrint(String(data: result.0, encoding: .utf8)!)
+            Log.info(String(data: result.0, encoding: .utf8)!)
             
             let model = try JSONDecoder().decode(LoginResponse.self, from: result.0)
-            debugPrint(model)
+            Log.info(model)
             await authManager.saveToken(Token(accessToken: model.accessToken, refreshToken: model.refreshToken))
             
             return model
         } catch {
-            debugPrint(error.localizedDescription)
+            Log.info(error.localizedDescription)
             throw error
         }
     }
@@ -78,3 +79,4 @@ class LoginApi {
  "avatar": "https://api.lorem.space/image/face?w=640&h=480&r=867"
  }
  */
+*/

@@ -133,7 +133,7 @@ extension DownloadService : URLSessionDownloadDelegate  {
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask,  didFinishDownloadingTo location: URL) {
         if let url = downloadTask.originalRequest?.url {
             let urlString = downloadTask.originalRequest?.url?.absoluteString
-            debugPrint("DEBUG: \(urlString)")
+            Log.info("DEBUG: \(urlString)")
             downloadSubject.send(DownloadInfo(url: url, downloadState: .downloaded))
         }
     }
@@ -141,7 +141,7 @@ extension DownloadService : URLSessionDownloadDelegate  {
     func urlSession(_ session: URLSession, downloadTask: URLSessionDownloadTask, didWriteData bytesWritten: Int64, totalBytesWritten: Int64, totalBytesExpectedToWrite: Int64) {
         if let url = downloadTask.originalRequest?.url {
             let progress  = Double(totalBytesWritten) / Double(totalBytesExpectedToWrite)
-            debugPrint("DEBUG: \(progress)")
+            Log.info("DEBUG: \(progress)")
             downloadSubject.send(DownloadInfo(url: url, downloadState:.downloading(progress: progress)))
         }
     }

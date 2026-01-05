@@ -20,8 +20,11 @@ extension Endpoint {
     var body: Data? {
         return nil
     }
-    var url: URL { URL(string: urlString)! }
-    var urlRequest: URLRequest {
+    var url: URL? {
+        return URL(string: urlString)
+    }
+    var urlRequest: URLRequest? {
+        guard let url = url else { return nil }
         var request = URLRequest(url: url)
         request.httpMethod = method
         headers.forEach { key, value in
@@ -39,9 +42,27 @@ struct ProfileApiEndpoint : Endpoint {
 
 
 
-enum NetworkError: Error {
+enum NetworkError: LocalizedError {
     case invalidToken
     case invalidResponse
+    case invalidURL
+    case httpError(statusCode: Int)
+    case decodingError(Error)
+    
+    var errorDescription: String? {
+        switch self {
+        case .invalidToken:
+            return "Invalid or expired token"
+        case .invalidResponse:
+            return "Invalid response from server"
+        case .invalidURL:
+            return "Invalid URL"
+        case .httpError(let statusCode):
+            return "HTTP error with status code: \(statusCode)"
+        case .decodingError(let error):
+            return "Failed to decode response: \(error.localizedDescription)"
+        }
+    }
 }
 
 class Network {
@@ -51,25 +72,48 @@ class Network {
     }
     
     func loadRequest<T:Decodable>( _ endPoint: Endpoint,  type: T.Type, allowRetry: Bool = true) async throws -> T  {
-        let request = try await getAuthorisedRequest(endPoint)
+        Log.info(endPoint)
+        guard let request = try await getAuthorisedRequest(endPoint) else {
+            throw NetworkError.invalidURL
+        }
         let (data, response) = try await URLSession.shared.data(for: request)
-        if let response = response as? HTTPURLResponse, response.statusCode == 401 {
-            if  allowRetry {
+        guard let httpResponse = response as? HTTPURLResponse else {
+            throw NetworkError.invalidResponse
+        }
+        // Handle 401 Unauthorized with token refresh
+        if httpResponse.statusCode == 401 {
+            if allowRetry {
                 print("Retrying...")
                 _ = try await authManager.refreshToken()
                 return try await loadRequest(endPoint, type: type, allowRetry: false)
             }
             throw NetworkError.invalidToken
         }
-        return try JSONDecoder().decode(type.self, from: data)
+        
+        // Validate successful status codes (200-299)
+        guard (200...299).contains(httpResponse.statusCode) else {
+            throw NetworkError.httpError(statusCode: httpResponse.statusCode)
+        }
+        
+        // Decode response
+        do {
+            return try JSONDecoder().decode(type.self, from: data)
+        } catch {
+            throw NetworkError.decodingError(error)
+        }
     }
     
-    func getAuthorisedRequest( _ endpoint:Endpoint) async throws -> URLRequest {
-        var request = endpoint.urlRequest
-        request.httpBody = endpoint.body
-        let token = try await authManager.validToken()
-        request.setValue("Bearer \(token.accessToken)", forHTTPHeaderField: "Authorization")
-        request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+    func getAuthorisedRequest( _ endpoint:Endpoint) async throws -> URLRequest? {
+        guard var request = endpoint.urlRequest else {
+            return nil
+        }
+        if !(endpoint is LoginApiRequest) {
+            let token = try await authManager.validToken()
+            request.setValue("Bearer \(token.accessToken)", forHTTPHeaderField: "Authorization")
+        }
+        if endpoint.body != nil {
+            request.setValue("application/json", forHTTPHeaderField: "Content-Type")
+        }
         return request
     }
 }

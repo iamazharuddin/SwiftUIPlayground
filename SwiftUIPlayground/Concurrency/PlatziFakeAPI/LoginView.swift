@@ -8,7 +8,6 @@
 
 import SwiftUI
 class LoginViewModel: ObservableObject {
-    let loginApi = LoginApi()
     let network = Network(authManager: .shared)
     @Published private(set) var profile:Profile?
     @AppStorage("loggedIn") private(set) var loggedIn: Bool = false
@@ -19,7 +18,7 @@ class LoginViewModel: ObservableObject {
             let endPoint = ProfileApiEndpoint(urlString: "https://api.escuelajs.co/api/v1/auth/profile", method: "GET")
             profile = try await network.loadRequest(endPoint, type: Profile.self, allowRetry: true)
         } catch {
-            debugPrint(error)
+            Log.info(error)
         }
     }
     
@@ -35,10 +34,16 @@ class LoginViewModel: ObservableObject {
                 let model = try await network.loadRequest(endpoint, type: LoginResponse.self, allowRetry: true)
                 await AuthManager.shared.saveToken(Token(accessToken: model.accessToken, refreshToken: model.refreshToken))
                 loggedIn = true
-            } catch {
-                debugPrint(error)
+            }  catch {
+                loggedIn = false 
+                Log.info(error)
             }
         }
+    }
+    
+    func logout() {
+         loggedIn = false
+         KeychainStore.clear()
     }
 }
 
@@ -62,6 +67,16 @@ struct Login:View {
                             .frame(width: 80, height: 80)
                     }
                 }
+                .navigationTitle(Text("Profile"))
+                .toolbar(content: {
+                    if viewModel.loggedIn {
+                        ToolbarItem(placement: .topBarTrailing) {
+                            Button("Logout") {
+                                viewModel.logout()
+                            }
+                        }
+                    }
+                })
                 .task {
                    await viewModel.callProfileApi()
                 }

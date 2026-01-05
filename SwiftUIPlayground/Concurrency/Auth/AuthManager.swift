@@ -40,18 +40,36 @@ actor AuthManager {
              return try await task.value
          }
          let task =  Task { () async throws -> Token in
-             let url = URL(string: "")!
+             guard let url = URL(string: "https://api.escuelajs.co/api/v1/auth/refresh-token") else {
+                 throw AuthError.missingToken
+             }
+             
              var request = URLRequest(url: url)
              request.httpMethod = "POST"
              request.setValue("application/json", forHTTPHeaderField: "Content-Type")
              request.httpBody = try JSONSerialization.data(withJSONObject: ["refreshToken": getToken()?.refreshToken ?? ""])
-             let (data, _) = try await URLSession.shared.data(for: request)
-             let model =  try  JSONDecoder().decode(Token.self, from: data)
+             let (data, response) = try await URLSession.shared.data(for: request)
+             
+             // Validate response
+             if let httpResponse = response as? HTTPURLResponse,
+                !(200...299).contains(httpResponse.statusCode) {
+                 throw AuthError.missingToken
+             }
+             
+             let model = try JSONDecoder().decode(Token.self, from: data)
              saveToken(model)
              return model
          }
          refreshTask = task
-         return try await task.value
+         
+         do {
+             let token = try await task.value
+             refreshTask = nil // Clean up after success
+             return token
+         } catch {
+             refreshTask = nil // Clean up after error
+             throw error
+         }
      }
     
      func saveToken(_ token:Token) {
@@ -66,7 +84,10 @@ actor AuthManager {
      func getToken() -> Token? {
         do {
             let token = try KeychainStore.load()
-            print("Token retrieved successfully")
+            Log.info(token)
+            if  token != nil {
+                Log.info("Token retrieved successfully")
+            }
             return token
         } catch {
             print(error.localizedDescription)
