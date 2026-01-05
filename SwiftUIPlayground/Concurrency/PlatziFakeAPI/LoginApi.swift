@@ -25,6 +25,12 @@ struct LoginResponse: Decodable {
     }
 }
 
+struct  LoginApiRequest: Endpoint {
+    var urlString: String
+    var method: String
+    var body: Data?
+}
+
 class LoginApi {
     private let authManager: AuthManager
     init(authManager: AuthManager = .shared) { self.authManager = authManager }
