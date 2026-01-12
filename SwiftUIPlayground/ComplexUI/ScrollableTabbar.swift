@@ -108,20 +108,31 @@ struct ScrollableTabbar: View {
                 }
                 .scrollTargetLayout()
                 .offsetX { value in
-                    print(value)
+//                    print(value)
                    let width =  (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.keyWindow?.screen.bounds.width ?? 0
                     let calculatedProgress:CGFloat  = -(value) / (CGFloat(ScrollableTab.allCases.count - 1) * width)
                     
                     let clampedProgress:CGFloat = min(max(0, calculatedProgress), 1)
                     
-                    progress = clampedProgress
-                    print(calculatedProgress)
+//                    progress = clampedProgress
+//                    print(calculatedProgress)
                 }
             }
             .scrollIndicators(.hidden)
             .scrollTargetBehavior(.paging)
             .scrollPosition(id: $selectedTab)
             .scrollClipDisabled()
+            .onScrollGeometryChange(for: CGFloat.self) {
+                 $0.contentOffset.x
+            } action: { oldValue, newValue in
+                print(newValue)
+                let width =  (UIApplication.shared.connectedScenes.first as? UIWindowScene)?.keyWindow?.screen.bounds.width ?? 0
+                 let calculatedProgress:CGFloat  = (newValue) / (CGFloat(ScrollableTab.allCases.count - 1) * width)
+                 
+                 let clampedProgress:CGFloat = min(max(0, calculatedProgress), 1)
+                self.progress = clampedProgress
+            }
+
         }
         .frame(maxWidth: .infinity, maxHeight: .infinity, alignment: .top)
     }
@@ -142,7 +153,7 @@ struct ScrollableTabbar: View {
     }
     
     private var customTabbar: some View {
-        HStack {
+        HStack(spacing:0) {
             ForEach(ScrollableTab.allCases) { tabItem in
                 HStack {
                     Image(systemName: tabItem.icon)
