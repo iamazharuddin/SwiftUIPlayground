@@ -25,7 +25,7 @@ struct SwiftUIPlaygroundApp: App {
     private let mockTest = TestCombineNetworking()
     var body: some Scene {
         WindowGroup {
-            Login()
+            ScrollableTabbar()
         }
     }
 }
