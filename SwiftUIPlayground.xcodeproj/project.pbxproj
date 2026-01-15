@@ -21,6 +21,26 @@
 		2B87A67E2E9A5073008E08D2 /* SwiftUIPlayground.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = SwiftUIPlayground.app; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
+/* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
+		2BE53AD72F19379A00C60299 /* Exceptions for "SwiftUIPlayground" folder in "SwiftUIPlayground" target */ = {
+			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
+			membershipExceptions = (
+				SystemDesign/note.txt,
+			);
+			target = 2B87A67D2E9A5073008E08D2 /* SwiftUIPlayground */;
+		};
+/* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
+
+/* Begin PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+		2BE53AD82F19379A00C60299 /* Exceptions for "SwiftUIPlayground" folder in "Compile Sources" phase from "SwiftUIPlayground" target */ = {
+			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
+			buildPhase = 2B87A67A2E9A5073008E08D2 /* Sources */;
+			membershipExceptions = (
+				SystemDesign/note.txt,
+			);
+		};
+/* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */
+
 /* Begin PBXFileSystemSynchronizedRootGroup section */
 		2B5489292EF07AF9005B3B25 /* SwiftUIPlaygroundTests */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
@@ -29,6 +49,10 @@
 		};
 		2B87A6802E9A5073008E08D2 /* SwiftUIPlayground */ = {
 			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				2BE53AD72F19379A00C60299 /* Exceptions for "SwiftUIPlayground" folder in "SwiftUIPlayground" target */,
+				2BE53AD82F19379A00C60299 /* Exceptions for "SwiftUIPlayground" folder in "Compile Sources" phase from "SwiftUIPlayground" target */,
+			);
 			path = SwiftUIPlayground;
 			sourceTree = "<group>";
 		};

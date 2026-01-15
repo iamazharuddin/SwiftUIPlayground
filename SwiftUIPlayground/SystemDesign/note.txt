@@ -1,0 +1,32 @@
+//
+//  note.swift
+//  SwiftUIPlayground
+//
+//  Created by Azharuddin Salahuddin on 15/01/26.
+//
+
+/*
+ 1. Solid principle
+ Dependency Inversion Principle -
+   Dependency gets inverted with the help interface
+   Instead of High level module directly depeneding on low level module
+   Both depends on abstraction
+  
+2. Chaining multipe api request
+   a. with the help of combine
+   b. with the help async await
+   c. completion handler
+   d. Using Grand central dispatch or Operation Queue
+
+3. Refresh Token
+   a. using async await
+   b. using combine
+4. Observer pattern
+5. Deleagte pattern
+6. Photo upload
+7. Video/PDF Downloader
+8. Analytics
+9. Dispatch Group Imp
+10. NotificationCenter Impl
+11. Write test cases
+*/
