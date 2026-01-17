@@ -9,7 +9,7 @@
  1. Solid principle
  Dependency Inversion Principle -
    Dependency gets inverted with the help interface
-   Instead of High level module directly depeneding on low level module
+   Instead of High level module directly depeneding on low level module -
    Both depends on abstraction
   
 2. Chaining multipe api request
@@ -23,10 +23,24 @@
    b. using combine
 4. Observer pattern
 5. Deleagte pattern
-6. Photo upload
-7. Video/PDF Downloader
-8. Analytics
-9. Dispatch Group Imp
+6. Photo upload (Background Task, Multipart upload, Retry)
+7. Video/PDF Downloader (Background, Resume)
+8. Analytics(Event batching)
+9.  Dispatch Group Imp
 10. NotificationCenter Impl
 11. Write test cases
+12. Memory graph analysis / ARC
+13. Websocket/ SSE/ polling (Real time sync)
+14. Generic Networing
+15. App Diagram Implementation (Facebook Feed, Download Manager, My Own App, Offline first app)
+16. MVC, MVVM, MVI, MVP and TCA App architecture (Trade offs)
+17. Error handling (Retry, Backoff)
+18. Grand central dispatch - (Dispatch Semaphore, Dispatch Group, DispatchWorkItem, Async Barrier, Sync vs Async, Serial vs Concurrent)
+     [sync vs Async and Serial vs Concurrent] Article
+     https://www.freecodecamp.org/news/ios-concurrency/
+19. Structured Concurrency
+20. Combine
+21. Operation Queue
+22. Dispatch group usage
+23. Real world problem faced - (Used serial queue to serialize the task)
 */

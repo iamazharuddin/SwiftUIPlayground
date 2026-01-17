@@ -14,13 +14,10 @@ struct AlertMessage: Identifiable {
 
 @main
 struct SwiftUIPlaygroundApp: App {
-    @UIApplicationDelegateAdaptor private var delegate: AppDelagate
+    @UIApplicationDelegateAdaptor private var delegate: AppDelegate
     let downloadService = DownloadService.shared
     @State private var cancellables: Set<AnyCancellable> = []
     let observer = AppLifeCycleObserver()
-    
-    let urlString = "https://www.adobe.com/support/products/enterprise/knowledgecenter/media/c4611_sample_explain.pdf"
-    
     @State private var alertMessage:AlertMessage?
     private let mockTest = TestCombineNetworking()
     var body: some Scene {
@@ -31,7 +28,8 @@ struct SwiftUIPlaygroundApp: App {
 }
 
 
-class AppDelagate: NSObject, UIApplicationDelegate {
+class AppDelegate: NSObject, UIApplicationDelegate {
+    var backgroundCompletionHandler:(() -> Void)?
     func applicationDidFinishLaunching(_ application: UIApplication) {
         
     }

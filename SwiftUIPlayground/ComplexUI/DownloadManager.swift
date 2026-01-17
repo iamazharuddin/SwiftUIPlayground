@@ -46,7 +46,7 @@ class   DownloadService: NSObject {
     private override init() {}
     var downloads : [URL: Download] = [:]
     lazy var session: URLSession = {
-        let configuration = URLSessionConfiguration.default
+        let configuration = URLSessionConfiguration.background(withIdentifier: "app.swiftui-playground.background-download")
         configuration.sessionSendsLaunchEvents = true
         configuration.waitsForConnectivity = true
         configuration.isDiscretionary = true
@@ -54,50 +54,13 @@ class   DownloadService: NSObject {
         return session
     }()
     
-    func startDownload(  _ urlString: String) {
-        //           guard let url = URL(string: urlString) else { return }
-        //           let download = Download(url: url)
-        //           let task: URLSessionDownloadTask = session.downloadTask(with: download.url)
-        //           download.downloadTask = task
-        //           download.downloadTask?.resume()
-        //           downloads[url] = download
-        
-        
-        
-        
-        Task {
-            do {
-                let url =  URL(string: urlString)!
-                let (asyncBytes, urlResponse) = try await session.bytes(from: url)
-                let length = (urlResponse.expectedContentLength)
-                let gb_total = Double(length) / 1024 / 1024 / 1024
-                
-                var data = Data()
-                data.reserveCapacity(Int(length))
-                
-                var downloaded:Int64 = 0
-                for  try await byte in asyncBytes {
-                    data.append(byte)
-                    let progress = Double(data.count) / Double(length)
-                    let gb = Double(data.count) / 1024 / 1024 / 1024
-                    let formatted_gb_total = String(format: "%.3f", gb_total)
-                    let formatted_gg_loaded = String(format: "%.3f", gb)
-                    
-                    try await Task.sleep(for: .seconds(0.000005))
-                    downloadSubject.send(DownloadInfo(url: url, downloadState:.downloading(progress: progress)))
-                }
-
-                let documentsDirectory = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first!
-               
-                let fileURL  = documentsDirectory.appendingPathComponent(url.lastPathComponent)
-                
-                try? data.write(to: fileURL)
-                try? FileManager.default.moveItem(at: url, to: fileURL)
-                downloadSubject.send(DownloadInfo(url: url, downloadState: .downloaded))
-            } catch {
-                
-            }
-        }
+    func   startDownload(  _ urlString: String) {
+           guard let url = URL(string: urlString) else { return }
+           let download = Download(url: url)
+           let task: URLSessionDownloadTask = session.downloadTask(with: download.url)
+           download.downloadTask = task
+           download.downloadTask?.resume()
+           downloads[url] = download
     }
     
     func pauseDownload(  _ urlString: String) {
@@ -111,14 +74,14 @@ class   DownloadService: NSObject {
     }
     
     func cancelDownload( _ urlString: String) {
-        guard let url = URL(string: urlString), var download = downloads[url] else { return }
+        guard let url = URL(string: urlString), let download = downloads[url] else { return }
         download.downloadTask?.cancel()
         download.state = .cancelled
         downloads[url] = download
     }
     
     func resumeDownload( _ urlString:String) {
-        guard let url = URL(string: urlString), var download = downloads[url] else { return }
+        guard let url = URL(string: urlString), let download = downloads[url] else { return }
         if let data = download.resumedData {
             download.downloadTask =    session.downloadTask(withResumeData: data)
         } else {
