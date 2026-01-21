@@ -5,10 +5,24 @@
 //  Created by Azharuddin Salahuddin on 02/01/26.
 //
 
+// https://www.donnywals.com/using-swifts-async-await-to-build-an-image-loader/
+
 import Foundation
 import UIKit
 
-class ImageLoader {
+actor ImageLoader {
+    
+let comment = """
+
+  Fetch function - 
+  1. Check if state already exist in  imageDic if yes return 
+  2. Check if image is saved in filesystem if yes return 
+  3. Fetch from network request, create the task and save the status in image dic 
+  
+"""
+
+
+    
     private var images: [URLRequest: LoaderStatus] = [:]
 
     public func fetch(_ url: URL) async throws -> UIImage {
