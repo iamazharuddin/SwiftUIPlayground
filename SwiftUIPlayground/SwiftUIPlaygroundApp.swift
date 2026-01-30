@@ -24,7 +24,7 @@ struct SwiftUIPlaygroundApp: App {
         WindowGroup {
             List {
                 ForEach(0..<10, id: \.self) { i in
-                    RemoteImage(source: URL(string: "https://fastly.picsum.photos/id/1/200/300.jpg?hmac=jH5bDkLr6Tgy3oAg5khKCHeunZMHq0ehBZr6vGifPLY")!)
+                    RemoteImage(source: URL(string: "https://i.imgur.com/CzXTtJV.jpg")!)
                 }
             }
         }
