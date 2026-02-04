@@ -7,11 +7,17 @@
 
 /*
  1. Solid principle
+ Single Responsibility Principle
+ OpenClose Principle
+ Listkov Subtitution Principle
+ https://medium.com/better-programming/solid-swift-by-examples-part-three-675672c1ec20
+ Interface Segregation Principle - to avoid Listkov Subtitute Principle
  Dependency Inversion Principle -
    Dependency gets inverted with the help interface
    Instead of High level module directly depeneding on low level module -
    Both depends on abstraction
-  
+Composite Pattern - can implement retry logic with help of this pattern
+https://medium.com/@stanleytraub/ios-design-patterns-composite-the-coolest-design-pattern-youve-never-heard-of-7037a3a67f5d
 2. Chaining multipe api request
    a. with the help of combine
    b. with the help async await

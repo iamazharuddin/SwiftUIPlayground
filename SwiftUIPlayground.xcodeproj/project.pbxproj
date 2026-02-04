@@ -80,6 +80,7 @@
 			isa = PBXGroup;
 			children = (
 				2B87A6802E9A5073008E08D2 /* SwiftUIPlayground */,
+				2BE3B51D2F3354680011AFEF /* New Group */,
 				2B5489292EF07AF9005B3B25 /* SwiftUIPlaygroundTests */,
 				2B87A67F2E9A5073008E08D2 /* Products */,
 			);
@@ -92,6 +93,13 @@
 				2B5489282EF07AF9005B3B25 /* SwiftUIPlaygroundTests.xctest */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		2BE3B51D2F3354680011AFEF /* New Group */ = {
+			isa = PBXGroup;
+			children = (
+			);
+			path = "New Group";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
