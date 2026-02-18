@@ -25,7 +25,7 @@
 		2BE53AD72F19379A00C60299 /* Exceptions for "SwiftUIPlayground" folder in "SwiftUIPlayground" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
-				SystemDesign/note.txt,
+				SystemDesign.txt,
 			);
 			target = 2B87A67D2E9A5073008E08D2 /* SwiftUIPlayground */;
 		};
@@ -36,7 +36,7 @@
 			isa = PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet;
 			buildPhase = 2B87A67A2E9A5073008E08D2 /* Sources */;
 			membershipExceptions = (
-				SystemDesign/note.txt,
+				SystemDesign.txt,
 			);
 		};
 /* End PBXFileSystemSynchronizedGroupBuildPhaseMembershipExceptionSet section */

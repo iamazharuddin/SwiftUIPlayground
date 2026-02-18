@@ -18,14 +18,14 @@ struct SwiftUIPlaygroundApp: App {
     let downloadService = DownloadService.shared
     @State private var cancellables: Set<AnyCancellable> = []
     let observer = AppLifeCycleObserver()
+    let obj = ApiChainRequest()
     @State private var alertMessage:AlertMessage?
     private let mockTest = TestCombineNetworking()
     var body: some Scene {
         WindowGroup {
-            List {
-                ForEach(0..<10, id: \.self) { i in
-                    RemoteImage(source: URL(string: "https://i.imgur.com/CzXTtJV.jpg")!)
-                }
+            VStack {}
+            .onAppear() {
+               
             }
         }
     }

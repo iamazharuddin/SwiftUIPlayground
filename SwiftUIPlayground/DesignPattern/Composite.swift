@@ -5,7 +5,24 @@
 //  Created by Azharuddin Salahuddin on 04/02/26.
 //
 
-
+/*
+ Composite Design pattern -
+ 
+ Tree Like structure
+ 
+ Every Node implements the same protocol
+ 
+    
+ 
+GD  DropBox  S3  Composite
+           |
+           V
+      StorageService
+           ^
+           |
+     FileUploadManager
+ 
+ */
 import UIKit
 
 protocol StorageService {
