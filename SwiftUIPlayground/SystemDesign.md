@@ -14,6 +14,7 @@
 ---
 
 ## Design Patterns
+https://www.geeksforgeeks.org/system-design/design-patterns-cheat-sheet-when-to-use-which-design-pattern/
 
 ### Composite Pattern
 
@@ -21,6 +22,7 @@
 - [iOS Design Patterns: Composite](https://medium.com/@stanleytraub/ios-design-patterns-composite-the-coolest-design-pattern-youve-never-heard-of-7037a3a67f5d)
 
 ### Observer Pattern
+https://www.geeksforgeeks.org/system-design/observer-pattern-set-1-introduction/
 
 ### Delegate Pattern
 
@@ -61,6 +63,7 @@
 ### 9. Memory Graph Analysis / ARC
 
 ### 10. Websocket / SSE / Polling
+https://medium.com/@asharsaleem4/long-polling-vs-server-sent-events-vs-websockets-a-comprehensive-guide-fb27c8e610d0
 
 - Real-time sync
 
@@ -87,7 +90,12 @@
 - Sync vs Async
 - Serial vs Concurrent
 
-**Article:** [iOS Concurrency](https://www.freecodecamp.org/news/ios-concurrency/)
+**Article:** [iOS Concurrency]
+https://www.freecodecamp.org/news/ios-concurrency/
+https://medium.com/@dmytro_chumakov/dispatchsemaphore-in-swift-1b03a90ff94f
+
+**NSLock and Actor** 
+https://medium.com/@govindaraokondala/from-nslock-to-actors-navigating-swifts-concurrency-tools-for-thread-safety-798534b7a02e
 
 ### 16. Structured Concurrency
 
@@ -98,6 +106,11 @@
 ### 19. Dispatch Group Usage
 
 ### 20. Real-World Problem
+File Download
+File upload
+Offline Video Player
+Offline First App
+
 
 - Used serial queue to serialize the task
 
@@ -105,4 +118,23 @@
 
 ## Clean Architecture Series
 
-- [YouTube Playlist](https://www.youtube.com/watch?v=CkylrfKvf1A&list=PLyjgjmI1UzlSWtjAMPOt03L7InkCRlGzb&index=6)
+- [YouTube Playlist]
+(https://www.youtube.com/watch?v=CkylrfKvf1A&list=PLyjgjmI1UzlSWtjAMPOt03L7InkCRlGzb&index=6)
+
+
+
+## Kafka, Webhook
+A webhook = another server sending an HTTP request to your server.
+Kafka decouples webhook ingestion from processing, enabling fast acknowledgement, durability, and horizontal scaling.
+
+A webhook is when another server automatically sends an HTTP request to your server to notify you about an event. Instead of your app repeatedly asking an API for updates (polling), the external service calls your API endpoint itself when something happens. In a normal API flow, you request data from them (GET → Stripe API), but with a webhook, they send data to you (POST → yourserver.com/webhook). In short: webhook = event notification pushed to your server via HTTP POST.
+
+
+
+#Swift UI
+## ObservableObject, Combine Subject, ObservedObject, StateObject, State, Binding, Bindable 
+    - https://www.avanderlee.com/swiftui/observable-macro-performance-increase-observableobject/
+    - https://www.donnywals.com/observable-in-swiftui-explained/
+## Animation 
+## Common Crashes
+## Memory Graph Analysis Xcode
