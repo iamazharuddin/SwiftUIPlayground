@@ -21,12 +21,14 @@ struct SwiftUIPlaygroundApp: App {
     let obj = ApiChainRequest()
     @State private var alertMessage:AlertMessage?
     private let mockTest = TestCombineNetworking()
+    
+    let vm = DecoratorViewModel(userLoader: APIUserLoader())
     var body: some Scene {
         WindowGroup {
-            VStack {}
-            .onAppear() {
-               
-            }
+            IOS26GlassBottomSheetHeaderOnlyDemo()
+                .onAppear() {
+                    vm.run()
+                }
         }
     }
 }

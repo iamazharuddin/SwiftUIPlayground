@@ -123,7 +123,7 @@ actor AuthManager {
 
     fileprivate func validToken() async throws -> Token {
         if let handle = refreshTask {
-            return try await handle.value
+            return try aw  ait handle.value
         }
 
         guard let token = currentToken else {
