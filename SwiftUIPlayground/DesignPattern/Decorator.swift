@@ -28,7 +28,6 @@ final class MainThreadApiDecorator : UserLoader {
             }
         }
     }
-      
 }
 
 class DecoratorViewModel {

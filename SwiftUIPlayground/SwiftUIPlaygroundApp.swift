@@ -27,7 +27,7 @@ struct SwiftUIPlaygroundApp: App {
         WindowGroup {
             IOS26GlassBottomSheetHeaderOnlyDemo()
                 .onAppear() {
-                    vm.run()
+                    Runner.run()
                 }
         }
     }

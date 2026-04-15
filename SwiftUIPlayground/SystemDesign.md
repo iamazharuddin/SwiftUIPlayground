@@ -21,7 +21,7 @@ content = """# 📘 System Design Notes (iOS / Swift)
 
 Reference:
 https://www.geeksforgeeks.org/system-design/design-patterns-cheat-sheet-when-to-use-which-design-pattern/
-
+https://blog.stackademic.com/adapter-design-pattern-in-ios-9e008ec29414
 ### 1. Composite Pattern
 - Retry logic
 - Tree structure handling  
