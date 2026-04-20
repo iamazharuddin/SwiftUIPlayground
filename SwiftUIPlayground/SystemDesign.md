@@ -9,19 +9,22 @@ content = """# 📘 System Design Notes (iOS / Swift)
 - **S — Single Responsibility Principle**
 - **O — Open/Closed Principle**
 - **L — Liskov Substitution Principle**  
-  https://medium.com/better-programming/solid-swift-by-examples-part-three-675672c1ec20
 - **I — Interface Segregation Principle**
 - **D — Dependency Inversion Principle**  
   - High-level & low-level modules depend on **abstractions**  
   - Achieved via **protocols (interfaces)**
-
+  https://medium.com/better-programming/solid-swift-by-examples-part-three-675672c1ec20
 ---
 
 ## 🔹 Design Patterns
 
 Reference:
 https://www.geeksforgeeks.org/system-design/design-patterns-cheat-sheet-when-to-use-which-design-pattern/
+
+Adapter 
 https://blog.stackademic.com/adapter-design-pattern-in-ios-9e008ec29414
+https://medium.com/better-programming/the-adapter-design-pattern-in-swift-59ae3f2289a1
+
 ### 1. Composite Pattern
 - Retry logic
 - Tree structure handling  
@@ -116,6 +119,7 @@ https://www.donnywals.com/category/swift-concurrency/
 
 ### 16. Combine
 https://www.donnywals.com/category/combine/
+combine operator
 https://medium.com/@lucaspedrazoli/a-handy-list-of-swift-combine-operators-e7b5d640761c
 
 ---
