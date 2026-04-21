@@ -12,21 +12,24 @@ loops: performance, crashes, memory, UIKit mechanics, patterns, architecture, an
 ## Table of contents
 1.Laggy UITableView and list performance
   Lag in UITableView usually happens when too much work is being done during scrolling on the main thread. I first check cell reuse, image loading, height calculation, Auto Layout cost, and whether expensive formatting or state computation is happening inside cellForRowAt. Then I use Instruments like Time Profiler and Core Animation to find the bottleneck and move expensive work off the main thread or cache it.
-2.EXC_BAD_ACCESS and crash classification
+2.EXC_BAD_ACCESS, Crash after release 
+[NotificationCenter observer not removed, Task not getting cancelled - Ex - bad access]
 3.Background crashes 
-5.Memory leaks and detection
-6.Design patterns 
-7.Clean Architecture
-11.Communication and collaboration
-12.Library vs Framework
-14.Data Races 
-17.Cacheing Staregy 
+5.Memory leaks and detection, Data Races 
+6.Design patterns, Library vs Framework, Clean Architecture
+17.Cacheing Staregy https://medium.com/@fenominall/exploring-advanced-caching-techniques-in-swift-for-ios-development-3df727f5feb6
+18.Concurrency => Sync vs Async 
 18.What to do if app is getting crash after release. What are the options 
     Pause phased rollout if you are using phased release.
     Turn off the broken feature with remote config / backend kill switch, if possible.
     Remove app from sale temporarily for new users if the issue is severe.
     Ship a hotfix as a new version. Apple says this is the proper path instead of rollback.
-4.Data passing patterns and UIResponder
+19.StateObject vs ObservableObject 
+20. Swift UI internal working 
+21. App life cycle state 
+
+
+
 
 import Foundation
 
@@ -159,5 +162,7 @@ Crash -
  Firabse Analytics, Firebase Crashlytics
  
 */
+
+
 
 ---
