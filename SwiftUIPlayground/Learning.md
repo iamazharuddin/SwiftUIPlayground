@@ -27,6 +27,7 @@ loops: performance, crashes, memory, UIKit mechanics, patterns, architecture, an
 19.StateObject vs ObservableObject 
 20. Swift UI internal working 
 21. App life cycle state 
+22. CI/CD pipeline setup, Github Action Setup 
 
 
 
