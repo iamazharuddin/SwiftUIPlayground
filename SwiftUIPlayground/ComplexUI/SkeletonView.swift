@@ -49,9 +49,9 @@ struct SkeletonView<S: Shape>: View {
                 isAnimating = !isAnimating
             }
             .transaction { transaction in
-                if transaction.animation != nil {
-                    transaction.animation = nil
-                }
+//                if transaction.animation != nil {
+//                    transaction.animation = nil
+//                }
             }
     }
 }
