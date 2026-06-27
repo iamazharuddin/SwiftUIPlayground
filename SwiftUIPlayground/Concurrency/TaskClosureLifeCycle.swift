@@ -9,16 +9,16 @@ import Foundation
 class TaskClosureLifeCycle  {
       private var value:Int = 0
     init() {
-        debugPrint("Init")
+        Log.info("Init")
     }
     deinit {
-        debugPrint("Deinit")
+        Log.info("Deinit")
     }
      func incrementValueWithTask() {
          Task {
              self.value += 1
              try? await Task.sleep(for: .seconds(2))
-             debugPrint("Value incremented to \(self.value)")
+             Log.info("Value incremented to \(self.value)")
          }
      }
 }
@@ -28,18 +28,18 @@ class CreateRetainCycle {
     private var value:Int = 0
     private var completionHandler: (() -> Void)?
     init () {
-        debugPrint("Init")
+        Log.info("Init")
     }
     
     deinit {
-        debugPrint("Deinit 💥")
+        Log.info("Deinit 💥")
     }
     
     
     func   incrementWithRetainCycle() {
             completionHandler  =  { [weak self] in
                 self?.value += 1
-                debugPrint("Value Incremented to \(self?.value)")
+                Log.info("Value Incremented to \(self?.value)")
             }
             
             DispatchQueue.main.asyncAfter(deadline: .now() + 2) {

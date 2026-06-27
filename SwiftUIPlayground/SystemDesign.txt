@@ -1,0 +1,65 @@
+//
+//  note.swift
+//  SwiftUIPlayground
+//
+//  Created by Azharuddin Salahuddin on 15/01/26.
+//
+
+/*
+ Single Responsibility Principle
+ OpenClose Principle
+ Listkov Subtitution Principle
+ https://medium.com/better-programming/solid-swift-by-examples-part-three-675672c1ec20
+ Interface Segregation Principle - to avoid Listkov Subtitute Principle
+ Dependency Inversion Principle -
+   Dependency gets inverted with the help interface
+   Instead of High level module directly depeneding on low level module -
+   Both depends on abstraction
+   
+   
+Composite Pattern - can implement retry logic with help of this pattern
+https://medium.com/@stanleytraub/ios-design-patterns-composite-the-coolest-design-pattern-youve-never-heard-of-7037a3a67f5d
+
+
+
+
+2. Chaining multipe api request
+   a. with the help of combine
+   b. with the help async await
+   c. completion handler
+   d. Using Grand central dispatch or Operation Queue
+
+3. Refresh Token
+   a. using async await
+   b. using combine
+4. Observer pattern
+5. Deleagte pattern
+6. Photo upload (Background Task, Multipart upload, Retry)
+7. Video/PDF Downloader (Background, Resume)
+8. Analytics(Event batching)
+9. Dispatch Group Imp
+10.NotificationCenter Impl
+11.Write test cases
+12.Memory graph analysis / ARC
+13. Websocket/ SSE/ polling (Real time sync)
+14. Generic Networing
+15. App Diagram Implementation (Facebook Feed, Download Manager, My Own App, Offline first app)
+16. MVC, MVVM, MVI, MVP and TCA App architecture (Trade offs)
+17. Error handling (Retry, Backoff)
+
+18. Grand central dispatch -
+(Dispatch Semaphore, Dispatch Group, DispatchWorkItem, Async Barrier, Sync vs Async, Serial vs Concurrent)
+     [sync vs Async and Serial vs Concurrent] Article
+     https://www.freecodecamp.org/news/ios-concurrency/
+     
+     
+     
+19. Structured Concurrency
+20. Combine
+21. Operation Queue
+22. Dispatch group usage
+23. Real world problem faced - (Used serial queue to serialize the task)
+
+Clean Architecture Series
+https://www.youtube.com/watch?v=CkylrfKvf1A&list=PLyjgjmI1UzlSWtjAMPOt03L7InkCRlGzb&index=6
+*/

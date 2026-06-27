@@ -58,26 +58,9 @@ struct ExpandableSearchBar2: View {
             .padding(.vertical,12)
             .background {
                 RoundedRectangle(cornerRadius: 30)
-                    .fill(
-                        .background
-                            .shadow(
-                            .drop(
-                                color: Color.black.opacity(0.08),
-                                radius: 5,
-                                x:5,
-                                y:5
-                            )
-                        )
-                            .shadow(
-                            .drop(
-                                color: Color.black.opacity(0.08),
-                                radius: 5,
-                                x:-5,
-                                y:-5
-                            )
-                            
-                        )
-                    )
+                    .fill(.background)
+                    .shadow(color: Color.black.opacity(0.08), radius: 5, x:5, y:5)
+                    .shadow(color: Color.black.opacity(0.08), radius: 5, x:-5, y:-5)
             }
         }
         .padding(.horizontal, 15)

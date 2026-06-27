@@ -3,3 +3,5 @@
 *.xcworkspace
 *.xcodeproj/project.xcworkspace/xcuserdata
 
+.env
+

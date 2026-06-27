@@ -5,9 +5,8 @@
 //  Created by Azharuddin Salahuddin on 20/12/25.
 //
 
-
+// https://medium.com/@dmytro_chumakov/dispatchsemaphore-in-swift-1b03a90ff94f
 import Foundation
-
 class Counter {
     let semaphore = DispatchSemaphore(value: 1)
     
@@ -29,7 +28,6 @@ class Counter {
         queue.async(execute: task)
         queue.async(execute: task)
     }
-    
 }
 
 

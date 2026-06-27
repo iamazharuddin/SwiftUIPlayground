@@ -52,7 +52,7 @@ struct AnimatedText: View {
     var body: some View {
         Rectangle()
             .overlay(
-                LinearGradient(colors: [.clear, .red, .clear], startPoint: .leading, endPoint: .trailing)
+                LinearGradient(colors: [.clear, .cyan, .clear], startPoint: .leading, endPoint: .trailing)
                     .frame(width: 100)
                     .offset(x: isAnimation ? getWidth() / 2  : -getWidth() / 2)
             )
