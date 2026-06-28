@@ -1,0 +1,4 @@
+# Fastlane plugins (extra actions). Loaded by the root Gemfile.
+# Teaching reference: docs/cicd/part-08-fastlane.md
+
+gem "fastlane-plugin-versioning"     # finer-grained version/build-number control (Part 20)

@@ -1,0 +1,92 @@
+# CI — runs on feature pushes and PRs into develop/main.
+# Teaching reference: docs/cicd/part-04-github-actions.md
+#
+# NOTE: This targets the hypothetical production app layout (App/App.xcodeproj,
+# scheme "ProductionApp-QA"). Adjust -project/-scheme/-destination to your repo
+# before enabling. Left here as a documented, production-shaped example.
+
+name: CI
+
+on:
+  push:
+    branches: [ "feature/**", "bugfix/**", "develop" ]
+    paths-ignore: [ "docs/**", "**.md" ]      # don't burn macOS minutes on docs edits
+  pull_request:
+    branches: [ "develop", "main" ]
+
+# A newer commit on the same branch/PR cancels the older, still-running build.
+# macOS minutes are ~10x Linux — don't pay for stale builds.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+# Least privilege (Part 23): read code; allow Danger to comment on PRs.
+permissions:
+  contents: read
+  pull-requests: write
+
+env:
+  XCODE_VERSION: "16.0"
+  SCHEME: "ProductionApp-QA"                  # builds against QA.xcconfig (Part 19)
+  DESTINATION: "platform=iOS Simulator,name=iPhone 15,OS=17.5"
+
+jobs:
+  # 1) Cheapest check first — lint. Runs in parallel with unit_test.
+  lint:
+    runs-on: macos-14
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - name: Select Xcode
+        run: sudo xcode-select -s "/Applications/Xcode_${XCODE_VERSION}.app"
+      - name: SwiftLint
+        run: |
+          brew install swiftlint
+          swiftlint --strict                  # warnings -> errors: fail fast
+
+  # 2) Build + unit tests. No `needs:` -> parallel with lint.
+  unit_test:
+    runs-on: macos-14
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Select Xcode
+        run: sudo xcode-select -s "/Applications/Xcode_${XCODE_VERSION}.app"
+      - name: Cache Swift Package Manager
+        uses: actions/cache@v4
+        with:
+          path: ~/Library/Developer/Xcode/DerivedData/**/SourcePackages
+          key: spm-${{ runner.os }}-${{ hashFiles('**/Package.resolved') }}
+          restore-keys: spm-${{ runner.os }}-
+      - name: Build & test
+        run: |
+          set -o pipefail                     # keep xcodebuild's real exit code through the pipe
+          xcodebuild test \
+            -project App/App.xcodeproj \
+            -scheme "$SCHEME" \
+            -destination "$DESTINATION" \
+            -resultBundlePath TestResults.xcresult \
+            | xcbeautify
+      - name: Upload test results
+        if: always()                          # upload even when tests fail
+        uses: actions/upload-artifact@v4
+        with:
+          name: unit-test-results
+          path: TestResults.xcresult
+          retention-days: 14
+
+  # 3) PR automation. Only on PRs, only after lint + unit_test pass.
+  danger:
+    needs: [ lint, unit_test ]
+    if: github.event_name == 'pull_request'
+    runs-on: macos-14
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true                 # installs Gemfile gems and caches them
+      - name: Run Danger
+        run: bundle exec danger
+        env:
+          DANGER_GITHUB_API_TOKEN: ${{ secrets.GITHUB_TOKEN }}

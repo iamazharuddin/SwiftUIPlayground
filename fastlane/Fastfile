@@ -1,0 +1,127 @@
+# Fastfile — the single source of truth for HOW the app is built/tested/shipped.
+# Humans and CI run the SAME lanes: `bundle exec fastlane <lane>`.
+# Teaching reference: docs/cicd/part-08-fastlane.md (+ part-07 build, part-09 signing)
+#
+# NOTE: targets the hypothetical production app (scheme "ProductionApp-*",
+# bundle id com.acme.productionapp). Adjust before using.
+
+default_platform(:ios)
+
+platform :ios do
+  # Runs before EVERY lane. On CI we must create a temporary keychain so codesign
+  # can store the Match-provided private key headlessly.
+  before_all do
+    setup_ci if is_ci
+  end
+
+  # Centralized success/failure notifications (Part 17) — no per-lane copy/paste.
+  after_all do |lane|
+    slack(message: "✅ #{lane} succeeded", success: true) if is_ci && ENV["SLACK_URL"]
+  end
+
+  error do |lane, exception|
+    if is_ci && ENV["SLACK_URL"]
+      slack(message: "❌ #{lane} failed: #{exception.message}", success: false)
+    end
+  end
+
+  # ---------------------------------------------------------------- lint
+  desc "Lint & format check (fast, run first)"
+  lane :lint do
+    # Prefer the binaries installed on the runner (brew) for speed/clarity.
+    sh("cd .. && swiftlint --strict")
+    sh("cd .. && swiftformat --lint .")
+  end
+
+  # ---------------------------------------------------------------- test
+  desc "Run unit + UI tests on the QA scheme"
+  lane :test do
+    run_tests(
+      project: "App/App.xcodeproj",
+      scheme: "ProductionApp-QA",          # builds against QA.xcconfig (Part 19)
+      devices: ["iPhone 15"],
+      result_bundle: true,                 # emit .xcresult for artifacts/coverage
+      code_coverage: true
+    )
+  end
+
+  # ---------------------------------------------------------------- build (validate signing)
+  desc "Build a signed Release archive without uploading (PR/merge signing check)"
+  lane :build do
+    sync_signing(type: "appstore")
+    build_app(
+      project: "App/App.xcodeproj",
+      scheme: "ProductionApp-Production",
+      configuration: "Release",
+      export_method: "app-store",
+      skip_package_ipa: false
+    )
+  end
+
+  # ---------------------------------------------------------------- beta (TestFlight)
+  desc "Build and upload a beta to TestFlight"
+  lane :beta do
+    sync_signing(type: "appstore")
+    key = asc_api_key
+
+    increment_build_number(
+      build_number: latest_testflight_build_number(api_key: key) + 1
+    )
+
+    build_app(
+      project: "App/App.xcodeproj",
+      scheme: "ProductionApp-Production",
+      export_method: "app-store"
+    )
+
+    upload_to_testflight(
+      api_key: key,
+      skip_waiting_for_build_processing: true   # don't idle paid runner minutes
+    )
+  end
+
+  # ---------------------------------------------------------------- release (App Store)
+  desc "Upload to App Store Connect and submit for review (human still clicks Release)"
+  lane :release do
+    sync_signing(type: "appstore")
+    build_app(
+      project: "App/App.xcodeproj",
+      scheme: "ProductionApp-Production",
+      export_method: "app-store"
+    )
+    upload_to_app_store(
+      api_key: asc_api_key,
+      submit_for_review: true,
+      automatic_release: false,           # iOS = Continuous Delivery: human go-live (Part 1)
+      precheck_include_in_app_purchases: false,
+      force: true                          # skip interactive HTML preview on CI
+    )
+  end
+
+  # ---------------------------------------------------------------- screenshots
+  desc "Capture App Store screenshots"
+  lane :screenshots do
+    capture_screenshots(
+      project: "App/App.xcodeproj",
+      scheme: "ProductionApp-UITests"
+    )
+  end
+
+  # ============================================================ helpers
+  # One signing path shared by build/beta/release. readonly on CI so the runner
+  # only consumes certs, never creates them (Part 9).
+  private_lane :sync_signing do |opts|
+    match(type: opts[:type] || "appstore", readonly: is_ci)
+  end
+
+  # Build the App Store Connect API key object from secrets (Part 10).
+  def asc_api_key
+    app_store_connect_api_key(
+      key_id: ENV["ASC_KEY_ID"],
+      issuer_id: ENV["ASC_ISSUER_ID"],
+      key_content: ENV["ASC_KEY_P8"],     # base64-encoded .p8 stored as a secret
+      is_key_content_base64: true,
+      in_house: false
+    )
+  end
+end

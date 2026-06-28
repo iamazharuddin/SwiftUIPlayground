@@ -1,0 +1,71 @@
+# Beta — builds and ships a TestFlight build on every merge to develop.
+# Teaching reference: docs/cicd/part-15-testflight.md (+ part-09 signing, part-10 secrets)
+#
+# NOTE: targets the hypothetical production app; requires repo secrets:
+#   MATCH_PASSWORD, MATCH_GIT_BASIC_AUTHORIZATION,
+#   ASC_KEY_ID, ASC_ISSUER_ID, ASC_KEY_P8 (base64 .p8), SLACK_WEBHOOK
+
+name: Beta (TestFlight)
+
+on:
+  push:
+    branches: [ "develop" ]        # every merge to develop ships a beta
+  workflow_dispatch:                # ...or trigger manually
+
+concurrency:
+  group: beta-${{ github.ref }}
+  cancel-in-progress: true          # only the latest merge needs shipping
+
+permissions:
+  contents: read
+
+env:
+  XCODE_VERSION: "16.0"
+
+jobs:
+  beta:
+    runs-on: macos-14
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0            # full history for versioning (Part 20)
+
+      - name: Select Xcode
+        run: sudo xcode-select -s "/Applications/Xcode_${XCODE_VERSION}.app"
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Decode secrets (ASC API key)
+        run: ./Scripts/decode_secrets.sh
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+
+      - name: Build & upload to TestFlight
+        run: bundle exec fastlane beta
+        env:
+          MATCH_PASSWORD:                ${{ secrets.MATCH_PASSWORD }}
+          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
+          ASC_KEY_ID:                    ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID:                 ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_P8:                    ${{ secrets.ASC_KEY_P8 }}
+
+      - name: Upload build artifacts (.ipa + dSYMs)
+        if: always()                  # keep for rollback/symbolication even on failure
+        uses: actions/upload-artifact@v4
+        with:
+          name: beta-${{ github.run_number }}
+          path: |
+            build/*.ipa
+            **/*.dSYM
+          retention-days: 90
+          if-no-files-found: warn
+
+      - name: Notify Slack
+        if: always()                  # report success AND failure
+        run: ./Scripts/notify_slack.sh "${{ job.status }}" "TestFlight beta (build ${{ github.run_number }})"
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}

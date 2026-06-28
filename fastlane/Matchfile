@@ -1,0 +1,14 @@
+# Code-signing storage config for `fastlane match`.
+# Certs/profiles live ENCRYPTED in a SEPARATE PRIVATE repo (never the app repo).
+# Teaching reference: docs/cicd/part-09-code-signing.md
+
+git_url("git@github.com:acme/ios-certificates.git")   # the dedicated private certs repo
+storage_mode("git")
+
+type("appstore")                                       # default; lanes override per use
+app_identifier(["com.acme.productionapp"])
+
+# Safe default: only USE existing certs. CI must stay readonly so it never
+# creates/revokes certificates (which would hit Apple's cert limit). A human
+# flips this off locally when minting new certs.
+readonly(true)
