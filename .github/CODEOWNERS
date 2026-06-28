@@ -1,0 +1,19 @@
+# CODEOWNERS — auto-requests reviewers and (with "Require review from Code Owners"
+# branch protection) blocks merge without the right approval.
+# Teaching reference: docs/cicd/part-21-pr-automation.md
+# NOTE: example team handles; replace @acme/* with your real GitHub teams.
+
+# Default owner for everything not matched below.
+*                       @acme/ios-team
+
+# CI/CD and tooling changes need DevOps eyes.
+/.github/               @acme/devops
+/fastlane/              @acme/devops
+/Scripts/               @acme/devops
+/Gemfile                @acme/devops
+
+# Environment config is sensitive — gate it on iOS leads.
+/Configurations/        @acme/ios-leads
+
+# Domain ownership example.
+/App/Sources/Payments/  @acme/payments-team

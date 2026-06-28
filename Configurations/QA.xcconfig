@@ -1,0 +1,7 @@
+// QA environment. docs/cicd/part-19-environments.md
+#include "Base.xcconfig"
+
+BUNDLE_ID_SUFFIX = .qa
+APP_DISPLAY_NAME = App QA
+API_BASE_URL = https:/$()/qa-api.acme.com
+LOG_LEVEL = debug

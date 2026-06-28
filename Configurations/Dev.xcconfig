@@ -1,0 +1,8 @@
+// Dev environment. docs/cicd/part-19-environments.md
+#include "Base.xcconfig"
+
+BUNDLE_ID_SUFFIX = .dev
+APP_DISPLAY_NAME = App Dev
+// `$()` splits the `//` so xcconfig doesn't treat it as a comment.
+API_BASE_URL = https:/$()/dev-api.acme.com
+LOG_LEVEL = debug

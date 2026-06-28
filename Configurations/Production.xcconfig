@@ -1,0 +1,8 @@
+// Production environment. docs/cicd/part-19-environments.md
+#include "Base.xcconfig"
+
+// No suffix -> the real, public bundle id (com.acme.productionapp).
+BUNDLE_ID_SUFFIX =
+APP_DISPLAY_NAME = App
+API_BASE_URL = https:/$()/api.acme.com
+LOG_LEVEL = warn

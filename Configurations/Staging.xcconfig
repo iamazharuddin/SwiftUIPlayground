@@ -1,0 +1,7 @@
+// Staging environment. docs/cicd/part-19-environments.md
+#include "Base.xcconfig"
+
+BUNDLE_ID_SUFFIX = .staging
+APP_DISPLAY_NAME = App Stg
+API_BASE_URL = https:/$()/staging-api.acme.com
+LOG_LEVEL = info

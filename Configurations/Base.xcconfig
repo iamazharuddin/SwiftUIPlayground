@@ -1,0 +1,20 @@
+// Base.xcconfig — settings shared by every environment.
+// Per-env files (#include this and override only what differs).
+// Teaching reference: docs/cicd/part-19-environments.md
+
+// Final bundle id = base + per-environment suffix (e.g. .qa, .staging, "").
+PRODUCT_BUNDLE_IDENTIFIER = com.acme.productionapp$(BUNDLE_ID_SUFFIX)
+
+// Marketing (public) version. Build number is set by CI (Part 20), not here.
+MARKETING_VERSION = 1.4.0
+
+SWIFT_VERSION = 6.0
+IPHONEOS_DEPLOYMENT_TARGET = 16.0
+TARGETED_DEVICE_FAMILY = 1,2
+
+// Surface these into Info.plist (e.g. <key>API_BASE_URL</key><string>$(API_BASE_URL)</string>)
+// to read at runtime. Each environment file sets the values below.
+//   BUNDLE_ID_SUFFIX
+//   APP_DISPLAY_NAME
+//   API_BASE_URL
+//   LOG_LEVEL
