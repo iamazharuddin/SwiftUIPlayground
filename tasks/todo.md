@@ -41,17 +41,28 @@ Dangerfile                       # PR automation (Parts 12, 21)
 - [x] **Batch 3:** Part 7 Build process · Part 8 Fastlane (+ real `fastlane/` files, `Gemfile`) · Part 9 Code signing
 - [x] **Batch 4:** Part 10 Secrets (+ `decode_secrets.sh`) · Part 11 Testing · Part 12 Static analysis (+ `.swiftlint.yml`, `.swiftformat`, `Dangerfile`)
 - [x] **Batch 5:** Part 13 Caching · Part 14 Artifacts · Part 15 TestFlight (+ real `beta.yml`, `notify_slack.sh`)
-- [ ] **Batch 6:** Part 16 App Store release · Part 17 Notifications · Part 18 Rollback
-- [ ] **Batch 7:** Part 19 Environments/xcconfig · Part 20 Versioning · Part 21 PR automation
-- [ ] **Batch 8:** Part 22 Performance · Part 23 Security · Part 24 Enterprise workflow
-- [ ] Final pass: wire workflows end-to-end, fill review section
+- [x] **Batch 6:** Part 16 App Store release (+ real `release.yml`) · Part 17 Notifications · Part 18 Rollback
+- [x] **Batch 7:** Part 19 Environments/xcconfig (+ 5 `.xcconfig`) · Part 20 Versioning (+ `set_build_number.sh`) · Part 21 PR automation (+ `CODEOWNERS`)
+- [x] **Batch 8:** Part 22 Performance (+ `setup-ios` composite action) · Part 23 Security · Part 24 Enterprise workflow
+- [x] All 24 parts complete
 
 ---
 
 ## Review
 
-### Batch 1 (Parts 1–3)
-- Created `docs/cicd/README.md` (index) + Parts 1–3 docs.
-- Scaffolded real folder skeleton: `.github/workflows/`, `fastlane/`, `Configurations/`, `Scripts/`
-  each with a README explaining its purpose (content filled in later batches).
-- Next: say "continue" for Batch 2 (Actions keywords, pipeline design, runners).
+**COMPLETE — all 24 parts + real pipeline files delivered.**
+
+- `docs/cicd/` — index + Parts 1–24 (~3,850 lines), each: concept → why → where → diagram →
+  config → line-by-line → internals → mistakes → debugging → best practices.
+- Real files (production-shaped, hypothetical app):
+  - Workflows: `.github/workflows/ci.yml`, `beta.yml`, `release.yml`
+  - Composite action: `.github/actions/setup-ios/action.yml`
+  - `.github/CODEOWNERS`
+  - Fastlane: `fastlane/{Fastfile,Appfile,Matchfile,Pluginfile}` + `Gemfile`
+  - Config: `Configurations/{Base,Dev,QA,Staging,Production}.xcconfig`
+  - Static analysis: `.swiftlint.yml`, `.swiftformat`, `Dangerfile`
+  - Scripts: `Scripts/{decode_secrets,notify_slack,set_build_number}.sh`
+- Pipeline files carry headers noting they target a hypothetical multi-scheme app and need
+  project/scheme/secrets wiring before they run against a real target.
+- Note: Parts 1–3 + UI library/skill were merged earlier in PR #4; Parts 4–24 are uncommitted on
+  `docs/readme-description` (not yet PR'd).

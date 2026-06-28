@@ -1,0 +1,68 @@
+# Release — builds, uploads, and submits to the App Store on a version tag.
+# Gated by the `production` GitHub Environment: a reviewer must approve before
+# this job (and its secrets) run. Teaching reference: docs/cicd/part-16-app-store-release.md
+#
+# NOTE: hypothetical app. Requires the same signing/ASC secrets as beta.yml,
+# scoped to the `production` environment (Settings → Environments).
+
+name: Release (App Store)
+
+on:
+  push:
+    tags: [ "v*" ]                 # e.g. git tag v1.4.0 && git push origin v1.4.0
+  workflow_dispatch:
+    inputs:
+      version:
+        description: "Marketing version (e.g. 1.4.0)"
+        required: true
+
+permissions:
+  contents: write                  # to create/update the GitHub Release
+
+jobs:
+  release:
+    runs-on: macos-14
+    environment: production        # <-- requires manual approval before the job starts
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Select Xcode
+        run: sudo xcode-select -s "/Applications/Xcode_16.0.app"
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Decode secrets (ASC API key)
+        run: ./Scripts/decode_secrets.sh
+        env:
+          ASC_KEY_ID: ${{ secrets.ASC_KEY_ID }}
+          ASC_KEY_P8: ${{ secrets.ASC_KEY_P8 }}
+
+      - name: Build, upload, and submit for review
+        run: bundle exec fastlane release
+        env:
+          MATCH_PASSWORD:                ${{ secrets.MATCH_PASSWORD }}
+          MATCH_GIT_BASIC_AUTHORIZATION: ${{ secrets.MATCH_GIT_BASIC_AUTHORIZATION }}
+          ASC_KEY_ID:                    ${{ secrets.ASC_KEY_ID }}
+          ASC_ISSUER_ID:                 ${{ secrets.ASC_ISSUER_ID }}
+          ASC_KEY_P8:                    ${{ secrets.ASC_KEY_P8 }}
+
+      # Store the EXACT shipped binary + dSYMs durably on the GitHub Release
+      # (rollback source + crash symbolication). docs/cicd/part-18-rollback.md
+      - name: Attach IPA + dSYMs to the GitHub Release
+        if: always()
+        uses: softprops/action-gh-release@v2
+        with:
+          files: |
+            build/*.ipa
+            **/*.dSYM
+
+      - name: Notify Slack
+        if: always()
+        run: ./Scripts/notify_slack.sh "${{ job.status }}" "App Store submission ${{ github.ref_name }}"
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK }}

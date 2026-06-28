@@ -41,15 +41,15 @@ Every topic follows the same shape:
 | 13 | [Caching](part-13-caching.md) | ✅ |
 | 14 | [Artifacts](part-14-artifacts.md) | ✅ |
 | 15 | [TestFlight deployment](part-15-testflight.md) | ✅ |
-| 16 | App Store release | ⏳ |
-| 17 | Notifications (Slack/Teams/Email) | ⏳ |
-| 18 | Rollback strategy | ⏳ |
-| 19 | Environment management (xcconfig) | ⏳ |
-| 20 | Versioning | ⏳ |
-| 21 | Pull Request automation | ⏳ |
-| 22 | Performance optimization | ⏳ |
-| 23 | Security | ⏳ |
-| 24 | Real enterprise workflow | ⏳ |
+| 16 | [App Store release](part-16-app-store-release.md) | ✅ |
+| 17 | [Notifications (Slack/Teams/Email)](part-17-notifications.md) | ✅ |
+| 18 | [Rollback strategy](part-18-rollback.md) | ✅ |
+| 19 | [Environment management (xcconfig)](part-19-environments.md) | ✅ |
+| 20 | [Versioning](part-20-versioning.md) | ✅ |
+| 21 | [Pull Request automation](part-21-pr-automation.md) | ✅ |
+| 22 | [Performance optimization](part-22-performance.md) | ✅ |
+| 23 | [Security](part-23-security.md) | ✅ |
+| 24 | [Real enterprise workflow](part-24-enterprise-workflow.md) | ✅ |
 
 ## The whole pipeline at a glance
 
