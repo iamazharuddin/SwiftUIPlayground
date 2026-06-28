@@ -25,7 +25,7 @@ struct SwiftUIPlaygroundApp: App {
     let vm = DecoratorViewModel(userLoader: APIUserLoader())
     var body: some Scene {
         WindowGroup {
-            IOS26GlassBottomSheetHeaderOnlyDemo()
+            VerifyMobileNumberSheetDemo()
                 .onAppear() {
                     Runner.run()
                 }
