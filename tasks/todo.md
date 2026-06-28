@@ -37,10 +37,10 @@ Dangerfile                       # PR automation (Parts 12, 21)
 
 - [x] Plan written, scope confirmed (docs+files, incremental, hypothetical app)
 - [ ] **Batch 1 (now):** Part 1 Fundamentals · Part 2 GitHub internals · Part 3 Repo structure (+ folder skeleton)
-- [ ] **Batch 2:** Part 4 GitHub Actions keywords · Part 5 Pipeline design · Part 6 Runners
-- [ ] **Batch 3:** Part 7 Build process · Part 8 Fastlane · Part 9 Code signing
-- [ ] **Batch 4:** Part 10 Secrets · Part 11 Testing · Part 12 Static analysis
-- [ ] **Batch 5:** Part 13 Caching · Part 14 Artifacts · Part 15 TestFlight
+- [x] **Batch 2:** Part 4 GitHub Actions keywords (+ real `ci.yml`) · Part 5 Pipeline design · Part 6 Runners
+- [x] **Batch 3:** Part 7 Build process · Part 8 Fastlane (+ real `fastlane/` files, `Gemfile`) · Part 9 Code signing
+- [x] **Batch 4:** Part 10 Secrets (+ `decode_secrets.sh`) · Part 11 Testing · Part 12 Static analysis (+ `.swiftlint.yml`, `.swiftformat`, `Dangerfile`)
+- [x] **Batch 5:** Part 13 Caching · Part 14 Artifacts · Part 15 TestFlight (+ real `beta.yml`, `notify_slack.sh`)
 - [ ] **Batch 6:** Part 16 App Store release · Part 17 Notifications · Part 18 Rollback
 - [ ] **Batch 7:** Part 19 Environments/xcconfig · Part 20 Versioning · Part 21 PR automation
 - [ ] **Batch 8:** Part 22 Performance · Part 23 Security · Part 24 Enterprise workflow

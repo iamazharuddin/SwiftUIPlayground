@@ -29,18 +29,18 @@ Every topic follows the same shape:
 | 1 | [CI/CD Fundamentals](part-01-cicd-fundamentals.md) | ✅ |
 | 2 | [GitHub Internals — push → Actions](part-02-github-internals.md) | ✅ |
 | 3 | [Repository Structure](part-03-repository-structure.md) | ✅ |
-| 4 | GitHub Actions keywords | ⏳ |
-| 5 | Pipeline design | ⏳ |
-| 6 | GitHub-hosted runners | ⏳ |
-| 7 | The build process (xcodebuild) | ⏳ |
-| 8 | Fastlane (beginner→advanced) | ⏳ |
-| 9 | Code signing & Match | ⏳ |
-| 10 | Secrets management | ⏳ |
-| 11 | Testing | ⏳ |
-| 12 | Static analysis (SwiftLint/Danger) | ⏳ |
-| 13 | Caching | ⏳ |
-| 14 | Artifacts | ⏳ |
-| 15 | TestFlight deployment | ⏳ |
+| 4 | [GitHub Actions keywords](part-04-github-actions.md) | ✅ |
+| 5 | [Pipeline design](part-05-pipeline-design.md) | ✅ |
+| 6 | [GitHub-hosted runners](part-06-runners.md) | ✅ |
+| 7 | [The build process (xcodebuild)](part-07-build-process.md) | ✅ |
+| 8 | [Fastlane (beginner→advanced)](part-08-fastlane.md) | ✅ |
+| 9 | [Code signing & Match](part-09-code-signing.md) | ✅ |
+| 10 | [Secrets management](part-10-secrets.md) | ✅ |
+| 11 | [Testing](part-11-testing.md) | ✅ |
+| 12 | [Static analysis (SwiftLint/Danger)](part-12-static-analysis.md) | ✅ |
+| 13 | [Caching](part-13-caching.md) | ✅ |
+| 14 | [Artifacts](part-14-artifacts.md) | ✅ |
+| 15 | [TestFlight deployment](part-15-testflight.md) | ✅ |
 | 16 | App Store release | ⏳ |
 | 17 | Notifications (Slack/Teams/Email) | ⏳ |
 | 18 | Rollback strategy | ⏳ |

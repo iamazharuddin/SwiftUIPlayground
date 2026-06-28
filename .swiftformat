@@ -1,0 +1,11 @@
+# SwiftFormat config. Run in CI as: swiftformat --lint .  (verify only, never rewrite on CI)
+# Teaching reference: docs/cicd/part-12-static-analysis.md
+
+--swiftversion 6.0
+--indent 4
+--maxwidth 120
+--importgrouping testable-bottom
+--self remove
+--commas inline
+--trimwhitespace always
+--exclude .build,DerivedData,App/Sources/Generated

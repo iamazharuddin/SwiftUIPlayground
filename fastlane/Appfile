@@ -1,0 +1,7 @@
+# App identity used by every lane. Teaching reference: docs/cicd/part-08-fastlane.md
+# Replace the placeholder values with the hypothetical production app's real IDs.
+
+app_identifier("com.acme.productionapp")   # the app's bundle identifier
+apple_id("ci@acme.com")                     # Apple account used for uploads (CI service account)
+itc_team_id("123456789")                    # App Store Connect (iTunes Connect) team id
+team_id("ABCDE12345")                       # Apple Developer Portal team id

@@ -1,0 +1,41 @@
+# SwiftLint config. Run in CI as: swiftlint --strict
+# Teaching reference: docs/cicd/part-12-static-analysis.md
+# NOTE: paths assume the hypothetical App/ layout; adjust `included`/`excluded`.
+
+disabled_rules:
+  - todo                      # TODOs tracked elsewhere; don't fail the build on them
+
+opt_in_rules:                 # valuable rules that are off by default
+  - force_unwrapping
+  - empty_count
+  - first_where
+  - sorted_imports
+  - closure_spacing
+  - redundant_nil_coalescing
+
+included:
+  - App/Sources
+  - App/Tests
+
+excluded:
+  - "**/.build"
+  - "**/DerivedData"
+  - App/Sources/Generated     # machine-generated code shouldn't fail human rules
+
+line_length:
+  warning: 120
+  error: 200                  # warn early, only fail on egregiously long lines
+
+type_body_length:
+  warning: 300
+  error: 500
+
+function_body_length:
+  warning: 60
+  error: 120
+
+identifier_name:
+  min_length: 2               # allow short, idiomatic names like `id`, `vm`
+  excluded: [ id, vm, x, y ]
+
+reporter: "github-actions-logging"   # annotate violations inline in the Actions UI
