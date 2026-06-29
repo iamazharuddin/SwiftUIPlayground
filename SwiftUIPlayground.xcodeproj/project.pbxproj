@@ -6,6 +6,10 @@
 	objectVersion = 77;
 	objects = {
 
+/* Begin PBXBuildFile section */
+		2BFD6D932FF2418E00D56397 /* ComposableArchitecture in Frameworks */ = {isa = PBXBuildFile; productRef = 2BFD6D922FF2418E00D56397 /* ComposableArchitecture */; };
+/* End PBXBuildFile section */
+
 /* Begin PBXContainerItemProxy section */
 		2B54892C2EF07AF9005B3B25 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -70,6 +74,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2BFD6D932FF2418E00D56397 /* ComposableArchitecture in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -145,6 +150,7 @@
 			);
 			name = SwiftUIPlayground;
 			packageProductDependencies = (
+				2BFD6D922FF2418E00D56397 /* ComposableArchitecture */,
 			);
 			productName = SwiftUIPlayground;
 			productReference = 2B87A67E2E9A5073008E08D2 /* SwiftUIPlayground.app */;
@@ -179,6 +185,7 @@
 			mainGroup = 2B87A6752E9A5073008E08D2;
 			minimizedProjectReferenceProxies = 1;
 			packageReferences = (
+				2BFD6D912FF2418E00D56397 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */,
 			);
 			preferredProjectObjectVersion = 77;
 			productRefGroup = 2B87A67F2E9A5073008E08D2 /* Products */;
@@ -478,6 +485,25 @@
 			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
+
+/* Begin XCRemoteSwiftPackageReference section */
+		2BFD6D912FF2418E00D56397 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/pointfreeco/swift-composable-architecture";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 1.26.0;
+			};
+		};
+/* End XCRemoteSwiftPackageReference section */
+
+/* Begin XCSwiftPackageProductDependency section */
+		2BFD6D922FF2418E00D56397 /* ComposableArchitecture */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = 2BFD6D912FF2418E00D56397 /* XCRemoteSwiftPackageReference "swift-composable-architecture" */;
+			productName = ComposableArchitecture;
+		};
+/* End XCSwiftPackageProductDependency section */
 	};
 	rootObject = 2B87A6762E9A5073008E08D2 /* Project object */;
 }

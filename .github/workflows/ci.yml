@@ -39,27 +39,40 @@ jobs:
           brew install swiftlint
           swiftlint lint --quiet
 
-  # 2) Compile the app. No `needs:` -> runs in parallel with lint.
-  #    NOTE: this builds the app target. Running the unit tests needs the
-  #    ComposableArchitecture SPM package wired into the project first
-  #    (SwiftUIPlaygroundTests imports it) — switch `build` to `test` once it is.
-  build:
+  # 2) Build + run unit tests. No `needs:` -> runs in parallel with lint.
+  #    SwiftUIPlaygroundTests depends on the ComposableArchitecture SPM package,
+  #    resolved from the committed Package.resolved (cached below).
+  unit_test:
     runs-on: macos-15
     timeout-minutes: 30
     steps:
       - uses: actions/checkout@v4
-      - name: Build
+      - name: Cache Swift Package Manager
+        uses: actions/cache@v4
+        with:
+          path: ~/Library/Developer/Xcode/DerivedData/**/SourcePackages
+          key: spm-${{ runner.os }}-${{ hashFiles('**/Package.resolved') }}
+          restore-keys: spm-${{ runner.os }}-
+      - name: Build & test
         run: |
           set -o pipefail
-          xcodebuild build \
+          xcodebuild test \
             -project "$PROJECT" \
             -scheme "$SCHEME" \
-            -destination 'generic/platform=iOS Simulator' \
+            -destination 'platform=iOS Simulator,name=iPhone 16' \
+            -resultBundlePath TestResults.xcresult \
             -quiet
+      - name: Upload test results
+        if: always()                          # upload even when tests fail
+        uses: actions/upload-artifact@v4
+        with:
+          name: unit-test-results
+          path: TestResults.xcresult
+          retention-days: 14
 
-  # 3) PR automation. Only on PRs, only after lint + build pass.
+  # 3) PR automation. Only on PRs, only after lint + unit_test pass.
   danger:
-    needs: [ lint, build ]
+    needs: [ lint, unit_test ]
     if: github.event_name == 'pull_request'
     runs-on: macos-15
     timeout-minutes: 10
