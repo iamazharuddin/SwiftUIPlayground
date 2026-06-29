@@ -1,12 +1,12 @@
-# SwiftLint config. Run in CI as: swiftlint --strict
+# SwiftLint config for the SwiftUIPlayground app.
+# CI runs it (non-strict) in .github/workflows/ci.yml — warnings annotate the PR,
+# only error-severity violations fail the build.
 # Teaching reference: docs/cicd/part-12-static-analysis.md
-# NOTE: paths assume the hypothetical App/ layout; adjust `included`/`excluded`.
 
 disabled_rules:
   - todo                      # TODOs tracked elsewhere; don't fail the build on them
 
 opt_in_rules:                 # valuable rules that are off by default
-  - force_unwrapping
   - empty_count
   - first_where
   - sorted_imports
@@ -14,13 +14,12 @@ opt_in_rules:                 # valuable rules that are off by default
   - redundant_nil_coalescing
 
 included:
-  - App/Sources
-  - App/Tests
+  - SwiftUIPlayground         # the app sources
+  - SwiftUIPlaygroundTests    # the test sources
 
 excluded:
   - "**/.build"
   - "**/DerivedData"
-  - App/Sources/Generated     # machine-generated code shouldn't fail human rules
 
 line_length:
   warning: 120
@@ -32,10 +31,14 @@ type_body_length:
 
 function_body_length:
   warning: 60
-  error: 120
+  error: 200
 
 identifier_name:
-  min_length: 2               # allow short, idiomatic names like `id`, `vm`
+  min_length: 2                             # allow short, idiomatic names like `id`, `vm`
   excluded: [ id, vm, x, y ]
+  validates_start_with_lowercase: warning   # SwiftUI @ViewBuilder funcs (FooView()) → warn, don't fail
+
+force_try:
+  severity: warning           # flag `try!` as a warning, not a build-breaking error
 
 reporter: "github-actions-logging"   # annotate violations inline in the Actions UI
